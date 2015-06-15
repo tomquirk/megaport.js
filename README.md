@@ -85,15 +85,15 @@ Example Return
 ```json
 [
   {
-    serviceGroupId: 122,
-    megaports: [
+    "serviceGroupId": 122,
+    "megaports": [
       {
-        productId: int,
-        associatedIxs: [...],
-        associatedVxcs: [...],
-        productName: "",
-        productType: "",
-        etc ...
+        "productId": int,
+        "associatedIxs": [...],
+        "associatedVxcs": [...],
+        "productName": "",
+        "productType": "",
+        "etc": ...
       }
     ]
   }
