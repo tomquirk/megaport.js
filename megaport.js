@@ -2,7 +2,8 @@
 var mp = (function () {
   var exports = function (baseurl) {
     var innerthis = this;
-    var onready, failauth, authUrl, authParams;
+    var onready = [],
+      failauth, authUrl, authParams;
     this.credentials = {};
 
 
@@ -32,8 +33,10 @@ var mp = (function () {
         function (d) {
           innerthis.credentials = d.data;
 
-          if (typeof onready == 'function') {
-            onready(innerthis.credentials);
+          if (typeof onready == 'object') {
+            for (var oR in onready)
+              if (typeof onready[oR] == 'function')
+                onready[oR](innerthis.credentials);
 
             console.log('Login Success');
           }
@@ -52,7 +55,9 @@ var mp = (function () {
 
     // /secure/dropdowns/locations
     this.ready = function (cb) {
-      onready = cb;
+      onready.push(cb);
+      if (typeof innerthis.credentials.token == 'string')
+        cb(innerthis.credentials);
       return innerthis;
     };
 
@@ -84,7 +89,7 @@ var mp = (function () {
       });
     };
 
-    this.menuStats = function (ext) {
+    this.menuStats = function () {
       return new Promise(function (resolve, reject) {
         q.onready(function () {
           xhr.get(baseurl + '/menuStats', {}, innerthis.credentials.token)

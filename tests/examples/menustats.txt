@@ -1,0 +1,7 @@
+// Returning current authenicated profile account stats/notifications
+
+megaport.menuStats().then(
+  function (menustats) {
+    output(menustats);
+  }
+);

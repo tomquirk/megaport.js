@@ -1,0 +1,6 @@
+// Return all services grouped by service groups you belong to.
+
+megaport.servicegroups()
+  .then( function (servicegroups) {
+    output(servicegroups);
+  } );

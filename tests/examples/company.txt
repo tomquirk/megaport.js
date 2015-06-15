@@ -1,0 +1,17 @@
+//Returning current users company
+
+megaport.company().then(
+  function (profileObj) {
+    output(profileObj);
+  }
+);
+
+//Updating current users company
+
+//  megaport.profile({
+//    www: 'http://www.megaport.com',
+//  }).then(
+//    function (response) {
+//      output(response);
+//    }
+//  );

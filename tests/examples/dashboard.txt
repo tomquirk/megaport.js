@@ -1,0 +1,7 @@
+// Returning current authenicated profile dashboard information
+
+megaport.dashboard().then(
+  function (dashboard) {
+    output(dashboard);
+  }
+);

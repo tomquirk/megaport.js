@@ -44,6 +44,30 @@ megaport.failauth(function () {
 });
 ```
 
+## Menu Stats
+
+Returning current authenicated profile account stats/notifications
+
+```javascript
+megaport.menuStats().then(
+  function (menustats) {
+    console.log(menustats);
+  }
+);
+```
+
+## Dashboard Info
+
+Returning current authenicated profile dashboard information
+
+```javascript
+megaport.dashboard().then(
+  function (menustats) {
+    console.log(menustats);
+  }
+);
+```
+
 ## User Profile
 
 Returning current authenicated profile information
@@ -55,7 +79,7 @@ megaport.profile().then(
   }
 );
 ```
-updating current authenicated profile information
+Updating current authenicated profile information
 
 ```javascript
 megaport.profile({
@@ -67,6 +91,71 @@ megaport.profile({
 );
 ```
 
+## Company Profile
+
+Returning current users company
+
+```javascript
+megaport.company().then(
+  function (profileObj) {
+    console.log(profileObj);
+  }
+);
+```
+Updating current users company
+
+```javascript
+megaport.profile({
+  www: 'http://www.megaport.com',
+}).then(
+  function (response) {
+    console.log(response);
+  }
+);
+```
+
+## Markets
+
+List of markets the current auth users company is registered in.
+
+```javascript
+megaport.market().then(
+  function (m) {
+    console.log(m);
+  }
+);
+```
+
+Market registration information by market id
+
+```javascript
+megaport.market(121).then(
+ function (m) {
+   console.log(m);
+ }
+);
+```
+
+Update market registration
+
+```javascript
+megaport.market(121, {
+ "billingContactName": "112",
+ "billingContactEmail": "112@asdasd.com",
+ "billingContactPhone": "112",
+ "address1": "112",
+ "address2": "112",
+ "postcode": "12",
+ "country": "Australia",
+ "city": "112",
+ "state": "12",
+ "web": "112"
+}).then(
+ function (m) {
+   console.log(m);
+ }
+);
+```
 
 ## Managing Services (products)
 

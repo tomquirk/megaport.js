@@ -1,9 +1,8 @@
 /* Testing Megaport Wrapper */
 
-megaport.servicegroups()
-  .then( function (servicegroups) {
-    output(servicegroups);
-  } );
+// get credentials of current auth user
+
+output(megaport.credentials);
 
 
 // send objects to output(obj) to output them >>

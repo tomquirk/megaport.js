@@ -1,0 +1,35 @@
+//List of markets the current auth users company is registered in.
+
+megaport.market().then(
+  function (m) {
+    output(m);
+  }
+);
+
+// Market registration information by market id
+
+//   megaport.market(121).then(
+//     function (m) {
+//       output(m);
+//     }
+//   );
+
+// Update market registration
+
+//   megaport.market(121, {
+//     "billingContactName": "112",
+//     "billingContactEmail": "112@asdasd.com",
+//     "billingContactPhone": "112",
+//     "address1": "112",
+//     "address2": "112",
+//     "postcode": "12",
+//     "country": "Australia",
+//     "city": "112",
+//     "state": "12",
+//     "web": "112",
+//     "companyLegalIdentifier": '100'
+//   }).then(
+//     function (m) {
+//       output(m);
+//     }
+//   );
