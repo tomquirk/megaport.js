@@ -55,13 +55,22 @@ megaport.profile().then(
   }
 );
 ```
+updating current authenicated profile information
+
+```javascript
+megaport.profile({
+  firstName: "Pat",
+}).then(
+  function (response) {
+    console.log(response);
+  }
+);
+```
 
 
 ## Managing Services (products)
 
 Return all services grouped by service groups you belong to.
-
-
 
 ```javascript
 megaport.servicegroups().then(

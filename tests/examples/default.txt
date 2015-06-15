@@ -1,7 +1,6 @@
 /* Testing Megaport Wrapper */
 
 megaport.servicegroups()
-  
   .then( function (servicegroups) {
     output(servicegroups);
   } );

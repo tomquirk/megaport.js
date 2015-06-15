@@ -5,3 +5,13 @@ megaport.profile().then(
     output(profileObj);
   }
 );
+
+// updateing current users profile
+
+//  megaport.profile({
+//    firstName: "Pat",
+//  }).then(
+//    function (profileObj) {
+//      output(profileObj);
+//    }
+//  );
