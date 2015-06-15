@@ -188,7 +188,7 @@ var mp = (function () {
       });
     };
 
-    this.product = function (productId) {
+    this.product = function (productId, obj) {
       // /v2/dropdowns/locations
       return new Promise(function (resolve, reject) {
         q.onready(function () {

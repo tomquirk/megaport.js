@@ -102,7 +102,7 @@ Example Return
 
 ### Get Service Details by productId
 
-megaport.product(int)
+megaport.product(productId)
 
 works for both megaport and vxc and soon IX
 
@@ -116,7 +116,18 @@ megaport.product(1).then(
 
 ### Update Service Details by productId
 
-megaport.product(int).update(obj);
+megaport.product(productId, obj);
+
+
+```javascript
+megaport.product(728, {
+  name: "SG test port" //SG test port
+}).then(
+  function (product) {
+    console.log(product);
+  }
+);
+```
 
 The object will have different params for product types (megaport/vxc/ix)
 
@@ -136,12 +147,3 @@ vxc : {
 }
 ```
 
-```javascript
-megaport.product(728).update({
-  name: "SG test port" //SG test port
-}).then(
-  function (product) {
-    console.log(product);
-  }
-);
-```
