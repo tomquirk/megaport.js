@@ -1,0 +1,17 @@
+{
+  "name": "megaport.js",
+  "version": "1.0.0",
+  "description": "megaport javascript api ",
+  "keywords": ["megaport"],
+  "main": "megaport.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/megaport/megaport.js"
+  },
+  "ignore": [
+    ".gitignore",
+    "README.md",
+    "tests"
+  ],
+  "license": "MIT"
+}
