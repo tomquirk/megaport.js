@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Megaport-js tests</title>
+  <script src="../megaport.js"></script>
+  <style type="text/css" media="screen">
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    #editor {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    #left {
+      width: 50%;
+      float: left;
+      height: 100vh;
+      position: relative;
+    }
+
+    #right {
+      width: 50%;
+      float: right;
+      height: 100vh;
+      overflow: scroll;
+    }
+
+    #fill {
+      position: absolute;
+      width: 100%;
+      background-color: white;
+      height: 100%;
+      z-index: 100;
+    }
+
+    #fill>form {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+    }
+
+    #fill>form input,
+    #fill>form button {
+      font-size: 20px;
+    }
+
+    #left>select {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 99;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div id="left">
+    <select name="" id="examples">
+      <option value="examples/default.txt">Load Example</option>
+      <option value="examples/profile.txt">Profiles</option>
+    </select>
+    <div id="editor"></div>
+  </div>
+  <div id="right">
+    <pre id="result"></pre>
+  </div>
+
+  <div id="fill">
+    <form>
+      <input type="text" name="url" placeholder="Api Url" value="https://api-staging.megaport.com/v2/" required>
+      <br>
+      <input type="text" name="username" placeholder="username" required>
+      <br>
+      <input type="text" name="password" placeholder="password" required>
+      <br>
+      <button>Login</button>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="https://rawgithub.com/yesmeck/jquery-jsonview/master/dist/jquery.jsonview.css" />
+  <script type="text/javascript" src="https://rawgithub.com/yesmeck/jquery-jsonview/master/dist/jquery.jsonview.js"></script>
+
+  <script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+
+    $('#examples').on('change', function () {
+      var file = $(this).val();
+      $.get(file, function (r) {
+        editor.setValue(r);
+      });
+
+    });
+
+    $('#examples').change();
+
+    var output = function (item) {
+      $('#result').JSONView(item).JSONView('collapse');
+    }
+
+    $(document).on('keydown', function (e) {
+      if (e.which === 83 && e.metaKey) {
+        eval(editor.getValue());
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    $('form').on('submit', function (e) {
+      console.log($(this).find('[name="url"]').val());
+      megaport = new mp($(this).find('[name="url"]').val());
+      megaport.auth({
+        username: $(this).find('[name="username"]').val(),
+        password: $(this).find('[name="password"]').val()
+      });
+      megaport.ready(function (credentials) {
+        $('#fill').remove();
+        console.log('Authenticated', credentials);
+      });
+
+      megaport.failauth(function () {
+        alert('Authentication Failed');
+      });
+
+      e.preventDefault();
+      return false;
+    });
+  </script>
+
+  <script>
+    console.log('Starting');
+  </script>
+</body>
+
+</html>

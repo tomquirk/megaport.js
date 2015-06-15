@@ -1,0 +1,7 @@
+// returns current users profile information
+
+megaport.profile().then(
+  function (profileObj) {
+    output(profileObj);
+  }
+);
