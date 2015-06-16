@@ -164,7 +164,7 @@ var mp = (function () {
                 xhr.put(baseurl + '/ticket/' + status + '/close', {}, innerthis.credentials.token)
                   .then(
                     function (d) {
-                      resolve(d.data);
+                      resolve(d);
                     },
                     function (d) {
                       reject(d);
