@@ -1,8 +1,14 @@
 // Listing open tickets.
 
+megaport.tickets().then(
+  function (list) {
+    output(list);
+  }
+);
+
 // TicketStatus: OPEN, CLOSED, ANY
 
-megaport.tickets('OPEN').then(
+megaport.tickets().filter('CLOSED').then(
   function (list) {
     output(list);
   }
@@ -34,7 +40,7 @@ megaport.tickets('OPEN').then(
 
 //Creating a ticket
 
-//megaport.tickets({
+//megaport.tickets().create({
 //  subject: 'Ticket 101',
 //  description: 'Ticket Description',
 //  queue: '',

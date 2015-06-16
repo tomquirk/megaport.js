@@ -106,12 +106,79 @@ var mp = (function () {
       });
     };
 
-    this.tickets = function (status, dothis) {
-
-      if (typeof status == 'object') {
-        return new Promise(function (resolve, reject) {
+    this.tickets = function (ticketId) {
+      return {
+        filter: function (status) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/ticket', {
+                  status: status || 'ANY'
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        comment: function (message) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/ticket/' + ticketId + '/comment', {
+                  comment: message
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        close: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/ticket/' + ticketId + '/close', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        create: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/ticket', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        then: (ticketId ? function (resolve, reject) {
           q.onready(function () {
-            xhr.post(baseurl + '/ticket', status, innerthis.credentials.token)
+            xhr.get(baseurl + '/ticket/' + ticketId, {}, innerthis.credentials.token)
               .then(
                 function (d) {
                   resolve(d.data);
@@ -122,13 +189,11 @@ var mp = (function () {
                 }
               );
           });
-        });
-      }
-
-      if (typeof status == 'number') {
-        return new Promise(function (resolve, reject) {
+        } : function (resolve, reject) {
           q.onready(function () {
-            xhr.get(baseurl + '/ticket/' + status, {}, innerthis.credentials.token)
+            xhr.get(baseurl + '/ticket', {
+                status: 'ANY'
+              }, innerthis.credentials.token)
               .then(
                 function (d) {
                   resolve(d.data);
@@ -139,61 +204,8 @@ var mp = (function () {
                 }
               );
           });
-        }, {
-          comment: function (message) {
-            return new Promise(function (resolve, reject) {
-              q.onready(function () {
-                xhr.post(baseurl + '/ticket/' + status + '/comment', {
-                    comment: message
-                  }, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data);
-                    },
-                    function (d) {
-                      reject(d);
-                      console.log(d);
-                    }
-                  );
-              });
-            });
-          },
-          close: function (message) {
-            return new Promise(function (resolve, reject) {
-              q.onready(function () {
-                xhr.put(baseurl + '/ticket/' + status + '/close', {}, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d);
-                    },
-                    function (d) {
-                      reject(d);
-                      console.log(d);
-                    }
-                  );
-              });
-            });
-          }
-        });
+        })
       }
-
-      status = status || 'ANY';
-      return new Promise(function (resolve, reject) {
-        q.onready(function () {
-          xhr.get(baseurl + '/ticket', {
-              status: status
-            }, innerthis.credentials.token)
-            .then(
-              function (d) {
-                resolve(d.data);
-              },
-              function (d) {
-                reject(d);
-                console.log(d);
-              }
-            );
-        });
-      });
     }
 
 
@@ -298,66 +310,72 @@ var mp = (function () {
       });
     };
 
-    this.market = function (id, obj) {
-      if (typeof id == 'object' && !obj) {
-        return new Promise(function (resolve, reject) {
-          q.onready(function () {
-            xhr.post(baseurl + '/market/' + id, obj, innerthis.credentials.token)
-              .then(
-                function (d) {
-                  resolve(d);
-                },
-                function (d) {
-                  reject(d);
-                }
-              );
+    this.markets = function (marketId) {
+      return {
+        update: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/market/' + marketId, obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
           });
-        });
-      }
-      if (typeof id == 'number' && typeof obj == 'object') {
-        return new Promise(function (resolve, reject) {
-          q.onready(function () {
-            xhr.put(baseurl + '/market/' + id, obj, innerthis.credentials.token)
-              .then(
-                function (d) {
-                  resolve(d);
-                },
-                function (d) {
-                  reject(d);
-                }
-              );
+        },
+        create: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/market', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
           });
-        });
-      }
-      if (typeof id == 'number' && !obj) {
-        return new Promise(function (resolve, reject) {
+        },
+        delete: {}, // needs to be written
+        then: (marketId ? function (resolve, reject) {
           q.onready(function () {
-            xhr.get(baseurl + '/market/' + id, {}, innerthis.credentials.token)
+            xhr.get(baseurl + '/market/' + marketId, {}, innerthis.credentials.token)
               .then(
                 function (d) {
                   resolve(d.data);
                 },
                 function (d) {
                   reject(d);
+                  console.log(d);
                 }
               );
           });
-        });
+        } : function (resolve, reject) {
+          q.onready(function () {
+            xhr.get(baseurl + '/market', {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data);
+                },
+                function (d) {
+                  reject(d);
+                  console.log(d);
+                }
+              );
+          });
+        })
       }
-      return new Promise(function (resolve, reject) {
-        q.onready(function () {
-          xhr.get(baseurl + '/market', {}, innerthis.credentials.token)
-            .then(
-              function (d) {
-                resolve(d.data);
-              },
-              function (d) {
-                reject(d);
-              }
-            );
-        });
-      });
     };
+
+
 
     this.company = function (obj) {
       if (obj) {
@@ -390,20 +408,53 @@ var mp = (function () {
       });
     };
 
-    this.employment = function (obj) {
-      return new Promise(function (resolve, reject) {
-        q.onready(function () {
-          xhr.get(baseurl + '/employment', {}, innerthis.credentials.token)
-            .then(
-              function (d) {
-                resolve(d.data);
-              },
-              function (d) {
-                reject(d);
-              }
-            );
-        });
-      });
+    this.employment = function (employmentId) {
+      return {
+        employ: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/employment', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        delete: {}, // needs to be written
+        then: (employmentId ? function (resolve, reject) {
+          q.onready(function () {
+            xhr.get(baseurl + '/employment/' + employmentId, {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data);
+                },
+                function (d) {
+                  reject(d);
+                  console.log(d);
+                }
+              );
+          });
+        } : function (resolve, reject) {
+          q.onready(function () {
+            xhr.get(baseurl + '/employment', {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data);
+                },
+                function (d) {
+                  reject(d);
+                  console.log(d);
+                }
+              );
+          });
+        })
+      }
     };
 
     this.profile = function (obj) {
@@ -626,6 +677,9 @@ var mp = (function () {
     this.put = function (url, params, token) {
       return innerthis.ajax('PUT', url, params, token);
     };
+    this.delete = function (url, params, token) {
+      return innerthis.ajax('DELETE', url, params, token);
+    }
   };
 
   return exports;

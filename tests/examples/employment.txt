@@ -1,0 +1,5 @@
+megaport.employment().then(
+  function (list) {
+    output(list);
+  }
+);

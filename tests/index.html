@@ -122,8 +122,9 @@
 
     $(document).on('keydown', function (e) {
       if (e.which === 83 && e.metaKey) {
-        eval(editor.getValue());
         e.preventDefault();
+        eval(editor.getValue());
+
         return false;
       }
     });

@@ -1,6 +1,6 @@
 //List of markets the current auth users company is registered in.
 
-megaport.market().then(
+megaport.markets().then(
   function (m) {
     output(m);
   }
@@ -8,7 +8,7 @@ megaport.market().then(
 
 // Market registration information by market id
 
-//   megaport.market(121).then(
+//   megaport.markets(121).then(
 //     function (m) {
 //       output(m);
 //     }
@@ -16,7 +16,7 @@ megaport.market().then(
 
 // Update market registration
 
-//   megaport.market(121, {
+//   megaport.markets(121, {
 //     "billingContactName": "112",
 //     "billingContactEmail": "112@asdasd.com",
 //     "billingContactPhone": "112",

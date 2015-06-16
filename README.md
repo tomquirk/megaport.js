@@ -118,33 +118,39 @@ megaport.profile({
 
 Listing open tickets.
 
-TicketStatus: OPEN, CLOSED, ANY
-
 ```javascript
-megaport.tickets('OPEN').then(
-  function (t) {
-    console.log(t);
+megaport.tickets().then(
+  function (list) {
+    output(list);
   }
 );
 ```
 
+TicketStatus: OPEN, CLOSED, ANY
+
+```javascript
+megaport.tickets().filter('CLOSED').then(
+  function (list) {
+    output(list);
+  }
+);
+```
 Returning specific ticket.
 
 ```javascript
 megaport.tickets(ticketId).then(
-  function (t) {
-    console.log(t);
-  }
+ function (t) {
+   output(t);
+ }
 );
 ```
-
 Commenting on a ticket
 
 ```javascript
 megaport.tickets(ticketId).comment('Comment String').then(
-  function (response) {
-    console.log(response);
-  }
+ function (response) {
+   output(response);
+ }
 );
 ```
 
@@ -152,25 +158,25 @@ Closing a ticket
 
 ```javascript
 megaport.tickets(ticketId).close().then(
-  function (response) {
-    console.log(response);
-  }
+ function (response) {
+   output(response);
+ }
 );
 ```
 
 Creating a ticket
 
 ```javascript
-megaport.tickets({
-  subject: 'Ticket 101',
-  description: 'Ticket Description',
-  queue: '',
-  serviceId: '',
-  companyId: ''
+megaport.tickets().create({
+ subject: 'Ticket 101',
+ description: 'Ticket Description',
+ queue: '',
+ serviceId: '',
+ companyId: ''
 }).close().then(
-  function (response) {
-    console.log(response);
-  }
+ function (response) {
+   output(response);
+ }
 );
 ```
 
@@ -180,9 +186,9 @@ megaport.tickets({
 List of markets the current auth users company is registered in.
 
 ```javascript
-megaport.market().then(
+megaport.markets().then(
   function (m) {
-    console.log(m);
+    output(m);
   }
 );
 ```
@@ -190,9 +196,9 @@ megaport.market().then(
 Market registration information by market id
 
 ```javascript
-megaport.market(121).then(
+megaport.markets(121).then(
  function (m) {
-   console.log(m);
+   output(m); 
  }
 );
 ```
@@ -200,7 +206,7 @@ megaport.market(121).then(
 Update market registration
 
 ```javascript
-megaport.market(121, {
+megaport.markets(121).update({
  "billingContactName": "112",
  "billingContactEmail": "112@asdasd.com",
  "billingContactPhone": "112",
