@@ -106,7 +106,77 @@ var mp = (function () {
       });
     };
 
-    this.tickets = function (status) {
+    this.tickets = function (status, dothis) {
+
+      if (typeof status == 'object') {
+        return new Promise(function (resolve, reject) {
+          q.onready(function () {
+            xhr.post(baseurl + '/ticket', status, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data);
+                },
+                function (d) {
+                  reject(d);
+                  console.log(d);
+                }
+              );
+          });
+        });
+      }
+
+      if (typeof status == 'number') {
+        return new Promise(function (resolve, reject) {
+          q.onready(function () {
+            xhr.get(baseurl + '/ticket/' + status, {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data);
+                },
+                function (d) {
+                  reject(d);
+                  console.log(d);
+                }
+              );
+          });
+        }, {
+          comment: function (message) {
+            return new Promise(function (resolve, reject) {
+              q.onready(function () {
+                xhr.post(baseurl + '/ticket/' + status + '/comment', {
+                    comment: message
+                  }, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data);
+                    },
+                    function (d) {
+                      reject(d);
+                      console.log(d);
+                    }
+                  );
+              });
+            });
+          },
+          close: function (message) {
+            return new Promise(function (resolve, reject) {
+              q.onready(function () {
+                xhr.put(baseurl + '/ticket/' + status + '/close', {}, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data);
+                    },
+                    function (d) {
+                      reject(d);
+                      console.log(d);
+                    }
+                  );
+              });
+            });
+          }
+        });
+      }
+
       status = status || 'ANY';
       return new Promise(function (resolve, reject) {
         q.onready(function () {
@@ -413,7 +483,7 @@ var mp = (function () {
   }
 
   // simple promise buider
-  function Promise(fn) {
+  function Promise(fn, additional) {
     var state = 'pending';
     var value;
     var deferred = null;
@@ -479,6 +549,10 @@ var mp = (function () {
       });
     };
 
+    for (var func in additional)
+      if (typeof additional[func] == 'function')
+        this[func] = additional[func];
+
     fn(resolve, reject);
   }
 
@@ -494,7 +568,7 @@ var mp = (function () {
 
         if (method == 'GET') {
           if (typeof params == 'object') {
-            params = (function (obj) {
+            var querystr = (function (obj) {
               var str = [];
               for (var p in obj)
                 if (obj.hasOwnProperty(p))
@@ -502,7 +576,7 @@ var mp = (function () {
 
               return str.join("&");
             })(params);
-            url += '&' + params;
+            url += '&' + querystr;
           }
         }
 

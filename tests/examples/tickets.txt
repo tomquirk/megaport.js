@@ -1,0 +1,47 @@
+// Listing open tickets.
+
+// TicketStatus: OPEN, CLOSED, ANY
+
+megaport.tickets('OPEN').then(
+  function (list) {
+    output(list);
+  }
+);
+
+//Returning specific ticket.
+
+//megaport.tickets(ticketId).then(
+//  function (t) {
+//    output(t);
+//  }
+//);
+
+//Commenting on a ticket
+
+//megaport.tickets(ticketId).comment('Comment String').then(
+//  function (response) {
+//    output(response);
+//  }
+//);
+
+//Closing a ticket
+
+//megaport.tickets(ticketId).close().then(
+//  function (response) {
+//    output(response);
+//  }
+//);
+
+//Creating a ticket
+
+//megaport.tickets({
+//  subject: 'Ticket 101',
+//  description: 'Ticket Description',
+//  queue: '',
+//  serviceId: '',
+//  companyId: ''
+//}).close().then(
+//  function (response) {
+//    output(response);
+//  }
+//);

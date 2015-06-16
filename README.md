@@ -114,6 +114,67 @@ megaport.profile({
 );
 ```
 
+## Tickets
+
+Listing open tickets.
+
+TicketStatus: OPEN, CLOSED, ANY
+
+```javascript
+megaport.tickets('OPEN').then(
+  function (t) {
+    console.log(t);
+  }
+);
+```
+
+Returning specific ticket.
+
+```javascript
+megaport.tickets(ticketId).then(
+  function (t) {
+    console.log(t);
+  }
+);
+```
+
+Commenting on a ticket
+
+```javascript
+megaport.tickets(ticketId).comment('Comment String').then(
+  function (response) {
+    console.log(response);
+  }
+);
+```
+
+Closing a ticket
+
+```javascript
+megaport.tickets(ticketId).close().then(
+  function (response) {
+    console.log(response);
+  }
+);
+```
+
+Creating a ticket
+
+```javascript
+megaport.tickets({
+  subject: 'Ticket 101',
+  description: 'Ticket Description',
+  queue: '',
+  serviceId: '',
+  companyId: ''
+}).close().then(
+  function (response) {
+    console.log(response);
+  }
+);
+```
+
+
 ## Markets
 
 List of markets the current auth users company is registered in.
