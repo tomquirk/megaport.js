@@ -237,7 +237,7 @@ megaport.servicegroups().then(
 );
 ```
 
-### Products
+### Update Service Details by productId
 
 megaport.product(productId)
 
@@ -271,39 +271,5 @@ megaport.product(1).checkPrice(1000).then(
     output(response);
   }
 );
-```
-
-
-### Update Service Details by productId
-
-megaport.product(productId, obj);
-
-
-```javascript
-megaport.product(728, {
-  name: "SG test port" //SG test port
-}).then(
-  function (product) {
-    console.log(product);
-  }
-);
-```
-
-The object will have different params for product types (megaport/vxc/ix)
-
-```json
-megaport : {
-  "name": String,
-  "favourite": true/false
-}
-```
-
-```json
-vxc : {
-  "name": String,
-  "rateLimit": int,
-  "aVlan": int,
-  "bVlan": int
-}
 ```
 
