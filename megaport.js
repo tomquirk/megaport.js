@@ -77,7 +77,7 @@ var mp = (function () {
           xhr.get(baseurl + '/dashboard' + (ext ? '/' + ext : ''), {}, innerthis.credentials.token)
             .then(
               function (d) {
-                resolve(d.data);
+                resolve(d.data || d);
               },
               function (d) {
                 reject(d);
@@ -94,7 +94,7 @@ var mp = (function () {
           xhr.get(baseurl + '/menuStats', {}, innerthis.credentials.token)
             .then(
               function (d) {
-                resolve(d.data);
+                resolve(d.data || d);
               },
               function (d) {
                 reject(d);
@@ -115,7 +115,7 @@ var mp = (function () {
                 }, innerthis.credentials.token)
                 .then(
                   function (d) {
-                    resolve(d.data);
+                    resolve(d.data || d);
                   },
                   function (d) {
                     reject(d);
@@ -133,7 +133,7 @@ var mp = (function () {
                 }, innerthis.credentials.token)
                 .then(
                   function (d) {
-                    resolve(d.data);
+                    resolve(d.data || d);
                   },
                   function (d) {
                     reject(d);
@@ -165,7 +165,7 @@ var mp = (function () {
               xhr.post(baseurl + '/ticket', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
-                    resolve(d.data);
+                    resolve(d.data || d);
                   },
                   function (d) {
                     reject(d);
@@ -180,7 +180,7 @@ var mp = (function () {
             xhr.get(baseurl + '/ticket/' + ticketId, {}, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d.data);
+                  resolve(d.data || d);
                 },
                 function (d) {
                   reject(d);
@@ -195,7 +195,7 @@ var mp = (function () {
               }, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d.data);
+                  resolve(d.data || d);
                 },
                 function (d) {
                   reject(d);
@@ -217,7 +217,7 @@ var mp = (function () {
           xhr.get(baseurl + url, {}, innerthis.credentials.token)
             .then(
               function (d) {
-                resolve(d.data);
+                resolve(d.data || d);
               },
               function (d) {
                 reject(d);
@@ -245,7 +245,7 @@ var mp = (function () {
           xhr.get(baseurl + url, pObj, innerthis.credentials.token)
             .then(
               function (d) {
-                resolve(d.data);
+                resolve(d.data || d);
               },
               function (d) {
                 reject(d);
@@ -263,7 +263,7 @@ var mp = (function () {
           xhr.get(baseurl + '/servicegroups', {}, innerthis.credentials.token)
             .then(
               function (d) {
-                resolve(d.data);
+                resolve(d.data || d);
               },
               function (d) {
                 reject(d);
@@ -273,16 +273,6 @@ var mp = (function () {
         });
       });
     };
-
-    function srvcObj(obj) {
-      var megaports = {};
-      obj.map(function (e) {
-        e.megaports.map(function (m) {
-          megaports[m.productUid] = m;
-        });
-      });
-      return megaports
-    }
 
     this.ports = function () {
       return new Promise(function (resolve, reject) {
@@ -358,7 +348,7 @@ var mp = (function () {
             xhr.get(baseurl + '/product/' + productId, {}, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d.data);
+                  resolve(d.data || d);
                 },
                 function (d) {
                   reject(d);
@@ -377,7 +367,7 @@ var mp = (function () {
           xhr.get(baseurl + '/dropdowns/locations', {}, innerthis.credentials.token)
             .then(
               function (d) {
-                resolve(d.data);
+                resolve(d.data || d);
               },
               function (d) {
                 console.log(d);
@@ -412,7 +402,7 @@ var mp = (function () {
               xhr.post(baseurl + '/market', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
-                    resolve(d.data);
+                    resolve(d.data || d);
                   },
                   function (d) {
                     reject(d);
@@ -428,7 +418,7 @@ var mp = (function () {
             xhr.get(baseurl + '/market/' + marketId, {}, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d.data);
+                  resolve(d.data || d);
                 },
                 function (d) {
                   reject(d);
@@ -441,7 +431,7 @@ var mp = (function () {
             xhr.get(baseurl + '/market', {}, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d.data);
+                  resolve(d.data || d);
                 },
                 function (d) {
                   reject(d);
@@ -476,7 +466,7 @@ var mp = (function () {
             xhr.put(baseurl + '/company', {}, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d.data);
+                  resolve(d.data || d);
                 },
                 function (d) {
                   reject(d);
@@ -496,7 +486,7 @@ var mp = (function () {
               xhr.post(baseurl + '/employment', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
-                    resolve(d.data);
+                    resolve(d.data || d);
                   },
                   function (d) {
                     reject(d);
@@ -512,7 +502,7 @@ var mp = (function () {
             xhr.get(baseurl + '/employment/' + employmentId, {}, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d.data);
+                  resolve(d.data || d);
                 },
                 function (d) {
                   reject(d);
@@ -525,7 +515,7 @@ var mp = (function () {
             xhr.get(baseurl + '/employment', {}, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d.data);
+                  resolve(d.data || d);
                 },
                 function (d) {
                   reject(d);
@@ -559,7 +549,7 @@ var mp = (function () {
             xhr.put(baseurl + '/employee/' + innerthis.credentials.personId, {}, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d.data);
+                  resolve(d.data || d);
                 },
                 function (d) {
                   reject(d);
@@ -578,7 +568,7 @@ var mp = (function () {
         xhr.post(baseurl + '/social/registration', obj)
           .then(
             function (d) {
-              resolve(d.data);
+              resolve(d.data || d);
             },
             function (d) {
               reject(d);
@@ -589,6 +579,16 @@ var mp = (function () {
   };
 
 
+  // building the ports obj
+  function srvcObj(obj) {
+    var megaports = {};
+    obj.map(function (e) {
+      e.megaports.map(function (m) {
+        megaports[m.productUid] = m;
+      });
+    });
+    return megaports;
+  }
 
   // que things that run prior to ready state;
   function que(callback) {
@@ -764,6 +764,6 @@ var mp = (function () {
 
   return exports;
 })();
-
+window.MP = mp;
 if (typeof module == 'object')
   module.exports = mp;

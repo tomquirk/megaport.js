@@ -75,7 +75,7 @@ Returning current authenicated profile information
 ```javascript
 megaport.profile().then(
   function (profileObj) {
-    console.log(profileObj);
+    output(profileObj);
   }
 );
 ```
@@ -86,7 +86,7 @@ megaport.profile().update({
   firstName: "Pat",
 }).then(
   function (response) {
-    console.log(response);
+    output(response);
   }
 );
 ```

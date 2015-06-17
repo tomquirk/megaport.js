@@ -1,0 +1,25 @@
+// Works for all (megaport, vxc, ix)
+
+megaport.product(productUid).then(
+  function (product) {
+    console.log(product);
+  }
+);
+
+// Update product (if changing rateLimit be sure to use .checkPrice() first)
+
+//  megaport.product(productUid).update({
+//  name: 'name change'
+//  }).then(
+//    function (response) {
+//      output(response);
+//    }
+//  );
+
+// Checking price on rateLimit changes
+
+//  megaport.product(productUid).checkPrice(1000).then(
+//    function (response) {
+//      output(response);
+//    }
+//  );

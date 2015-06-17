@@ -1,4 +1,4 @@
-// returns current users profile information
+// Returning current authenicated profile information
 
 megaport.profile().then(
   function (profileObj) {
@@ -6,12 +6,12 @@ megaport.profile().then(
   }
 );
 
-// updateing current users profile
+// Updating current authenicated profile information
 
-//  megaport.profile({
+//  megaport.profile().update({
 //    firstName: "Pat",
 //  }).then(
-//    function (profileObj) {
-//      output(profileObj);
+//    function (response) {
+//      output(response);
 //    }
 //  );

@@ -8,46 +8,46 @@ megaport.tickets().then(
 
 // TicketStatus: OPEN, CLOSED, ANY
 
-megaport.tickets().filter('CLOSED').then(
-  function (list) {
-    output(list);
-  }
-);
+//  megaport.tickets().filter('CLOSED').then(
+//    function (list) {
+//      output(list);
+//    }
+//  );
 
-//Returning specific ticket.
+// Returning specific ticket.
 
-//megaport.tickets(ticketId).then(
-//  function (t) {
-//    output(t);
-//  }
-//);
+//  megaport.tickets(ticketId).then(
+//    function (t) {
+//      output(t);
+//    }
+//  );
 
-//Commenting on a ticket
+// Commenting on a ticket
 
-//megaport.tickets(ticketId).comment('Comment String').then(
-//  function (response) {
-//    output(response);
-//  }
-//);
+//  megaport.tickets(ticketId).comment('Comment String').then(
+//    function (response) {
+//      output(response);
+//    }
+//  );
 
-//Closing a ticket
+// Closing a ticket
 
-//megaport.tickets(ticketId).close().then(
-//  function (response) {
-//    output(response);
-//  }
-//);
+//  megaport.tickets(ticketId).close().then(
+//    function (response) {
+//      output(response);
+//    }
+//  );
 
-//Creating a ticket
+// Creating a ticket
 
-//megaport.tickets().create({
-//  subject: 'Ticket 101',
-//  description: 'Ticket Description',
-//  queue: '',
-//  serviceId: '',
-//  companyId: ''
-//}).close().then(
-//  function (response) {
-//    output(response);
-//  }
-//);
+//  megaport.tickets().create({
+//    subject: 'Ticket 101',
+//    description: 'Ticket Description',
+//    queue: '',
+//    serviceId: '',
+//    companyId: ''
+//  }).close().then(
+//    function (response) {
+//      output(response);
+//    }
+//  );
