@@ -2,7 +2,9 @@
 
 // get credentials of current auth user
 
-output(megaport.credentials);
+megaport.ports().then(function(d){
+    output(d);
+});
 
 
 // send objects to output(obj) to output them >>

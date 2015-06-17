@@ -1,5 +1,16 @@
+//List of employments the current auth users company.
+
 megaport.employment().then(
-  function (list) {
-    output(list);
+  function (m) {
+    output(m);
   }
 );
+
+// employment information by employmentId
+
+//   megaport.employment(121).then(
+//     function (m) {
+//       output(m);
+//     }
+//   );
+

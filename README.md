@@ -225,26 +225,24 @@ megaport.markets(121).update({
 );
 ```
 
-## Managing Services (products)
+## Managing Services
 
-Return all services grouped by service groups you belong to.
+Return all megaport and thier assossiated services.
 
 ```javascript
-megaport.servicegroups().then(
-  function (servicegroups) {
-    console.log(servicegroups);
-  }
-);
+megaport.ports().then(function(megaports){
+    output(megaports);
+});
 ```
 
 ### Update Service Details by productId
 
-megaport.product(productId)
+megaport.product(productUid)
 
 works for both megaport, vxc, ix
 
 ```javascript
-megaport.product(1).then(
+megaport.product(productUid).then(
   function (product) {
     console.log(product);
   }
@@ -254,7 +252,7 @@ megaport.product(1).then(
 Update product (if changing rateLimit be sure to use .checkPrice() first)
 
 ```javascript
-megaport.product(1).update({
+megaport.product(productUid).update({
 name: 'name change'
 }).then(
   function (response) {
@@ -266,7 +264,7 @@ name: 'name change'
 Checking price on rateLimit changes
 
 ```javascript
-megaport.product(1).checkPrice(1000).then(
+megaport.product(productUid).checkPrice(1000).then(
   function (response) {
     output(response);
   }

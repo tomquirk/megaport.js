@@ -274,6 +274,35 @@ var mp = (function () {
       });
     };
 
+    function srvcObj(obj) {
+      var megaports = {};
+      obj.map(function (e) {
+        e.megaports.map(function (m) {
+          megaports[m.productUid] = m;
+        });
+      });
+      return megaports
+    }
+
+    this.ports = function () {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
+          xhr.get(baseurl + '/servicegroups', {}, innerthis.credentials.token)
+            .then(
+              function (d) {
+                resolve(srvcObj(d.data));
+              },
+              function (d) {
+                reject(d);
+                console.log(d);
+              }
+            );
+        });
+      });
+    };
+
+
+
     this.product = function (productId) {
       // /v2/dropdowns/locations
 
