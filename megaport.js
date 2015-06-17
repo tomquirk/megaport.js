@@ -1,4 +1,4 @@
-/* jshint -W083 */
+/* jshint -W083, -W117  */
 var mp = (function () {
   var exports = function (baseurl) {
     var innerthis = this;
@@ -8,7 +8,7 @@ var mp = (function () {
 
 
     var xhr = new xhreq();
-    q = new que();
+    var q = new que();
 
     this.auth = function (obj) {
       if (typeof obj.username == 'string' && typeof obj.password == 'string') {
@@ -66,7 +66,6 @@ var mp = (function () {
     };
 
     this.destroy = function (cb) {
-      auth = {};
       if (typeof cb == 'function')
         cb(cb);
     };
@@ -205,8 +204,8 @@ var mp = (function () {
               );
           });
         })
-      }
-    }
+      };
+    };
 
 
     this.ixp = function (peerid, rsid, productid) {
@@ -275,26 +274,75 @@ var mp = (function () {
       });
     };
 
-    this.product = function (productId, obj) {
+    this.product = function (productId) {
       // /v2/dropdowns/locations
-      return new Promise(function (resolve, reject) {
-        q.onready(function () {
-          xhr.get(baseurl + '/product/' + productId, {}, innerthis.credentials.token)
-            .then(
-              function (d) {
-                resolve(d.data);
-              },
-              function (d) {
-                console.log(d);
-              }
-            );
-        });
-      });
+
+      return {
+        checkPrice: function (rateLimit) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              innerThis.then(function (productObj) {
+                var type = '/' + productObj.productType.toLowerCase();
+                if (type == '/megaport')
+                  type = '';
+                xhr.get(baseurl + '/product' + type + '/' + productId + '/checkPrice', {
+                    rateLimit: rateLimit
+                  }, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      console.log(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
+        update: function (obj) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              innerThis.then(function (productObj) {
+                var type = '/' + productObj.productType.toLowerCase();
+                if (type == '/megaport')
+                  type = '';
+                xhr.put(baseurl + '/product' + type + '/' + productId, obj, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      console.log(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
+        then: function (resolve, reject) {
+          q.onready(function () {
+            xhr.get(baseurl + '/product/' + productId, {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data);
+                },
+                function (d) {
+                  reject(d);
+                  console.log(d);
+                }
+              );
+          });
+        }
+      };
     };
 
     this.locations = function () {
       // /v2/dropdowns/locations
-
       return new Promise(function (resolve, reject) {
         q.onready(function () {
           xhr.get(baseurl + '/dropdowns/locations', {}, innerthis.credentials.token)
@@ -329,6 +377,7 @@ var mp = (function () {
           });
         },
         create: function (obj) {
+          //  https://git.megaport.com/snippets/97
           return new Promise(function (resolve, reject) {
             q.onready(function () {
               xhr.post(baseurl + '/market', obj, innerthis.credentials.token)
@@ -372,40 +421,42 @@ var mp = (function () {
               );
           });
         })
-      }
+      };
     };
 
 
-
     this.company = function (obj) {
-      if (obj) {
-        return new Promise(function (resolve, reject) {
+      return {
+        update: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/company', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d);
+                  },
+                  function (d) {
+                    reject(d);
+                  }
+                );
+            });
+          });
+        },
+        then: function (resolve, reject) {
           q.onready(function () {
-            xhr.put(baseurl + '/company', obj, innerthis.credentials.token)
+            xhr.put(baseurl + '/company', {}, innerthis.credentials.token)
               .then(
                 function (d) {
-                  resolve(d);
+                  resolve(d.data);
                 },
                 function (d) {
                   reject(d);
+                  console.log(d);
                 }
               );
           });
-        });
-      }
-      return new Promise(function (resolve, reject) {
-        q.onready(function () {
-          xhr.get(baseurl + '/company', {}, innerthis.credentials.token)
-            .then(
-              function (d) {
-                resolve(d.data);
-              },
-              function (d) {
-                reject(d);
-              }
-            );
-        });
-      });
+        }
+      };
     };
 
     this.employment = function (employmentId) {
@@ -454,47 +505,46 @@ var mp = (function () {
               );
           });
         })
-      }
+      };
     };
 
     this.profile = function (obj) {
-
-      if (typeof obj == 'object') {
-        return new Promise(function (resolve, reject) {
-          q.onready(function () {
-            xhr.put(baseurl + '/employee/' + innerthis.credentials.personId, obj, innerthis.credentials.token)
-              .then(
-                function (d) {
-                  resolve(d);
-                },
-                function (d) {
-                  reject(d);
-                }
-              );
+      return {
+        update: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/employee/' + innerthis.credentials.personId, obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d);
+                  },
+                  function (d) {
+                    reject(d);
+                  }
+                );
+            });
           });
-        });
-      } else {
-        return new Promise(function (resolve, reject) {
+        },
+        then: function (resolve, reject) {
           q.onready(function () {
-            xhr.get(baseurl + '/employee/' + innerthis.credentials.personId, {}, innerthis.credentials.token)
+            xhr.put(baseurl + '/employee/' + innerthis.credentials.personId, {}, innerthis.credentials.token)
               .then(
                 function (d) {
                   resolve(d.data);
                 },
                 function (d) {
                   reject(d);
+                  console.log(d);
                 }
               );
           });
-        });
-      }
-
-    }
+        }
+      };
+    };
 
 
     this.register = function (obj) {
       // https://git.megaport.com/snippets/82
-
       return new Promise(function (resolve, reject) {
         xhr.post(baseurl + '/social/registration', obj)
           .then(
@@ -506,7 +556,7 @@ var mp = (function () {
             }
           );
       });
-    }
+    };
   };
 
 
@@ -629,6 +679,7 @@ var mp = (function () {
             })(params);
             url += '&' + querystr;
           }
+          console.log(url);
         }
 
         var rq = new XMLHttpRequest();
@@ -679,7 +730,7 @@ var mp = (function () {
     };
     this.delete = function (url, params, token) {
       return innerthis.ajax('DELETE', url, params, token);
-    }
+    };
   };
 
   return exports;

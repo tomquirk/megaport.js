@@ -82,7 +82,7 @@ megaport.profile().then(
 Updating current authenicated profile information
 
 ```javascript
-megaport.profile({
+megaport.profile().update({
   firstName: "Pat",
 }).then(
   function (response) {
@@ -102,10 +102,11 @@ megaport.company().then(
   }
 );
 ```
+
 Updating current users company
 
 ```javascript
-megaport.profile({
+megaport.company().update({
   www: 'http://www.megaport.com',
 }).then(
   function (response) {
@@ -236,31 +237,11 @@ megaport.servicegroups().then(
 );
 ```
 
-Example Return
-
-```json
-[
-  {
-    "serviceGroupId": 122,
-    "megaports": [
-      {
-        "productId": int,
-        "associatedIxs": [...],
-        "associatedVxcs": [...],
-        "productName": "",
-        "productType": "",
-        "etc": ...
-      }
-    ]
-  }
-]
-```
-
-### Get Service Details by productId
+### Products
 
 megaport.product(productId)
 
-works for both megaport and vxc and soon IX
+works for both megaport, vxc, ix
 
 ```javascript
 megaport.product(1).then(
@@ -269,6 +250,29 @@ megaport.product(1).then(
   }
 );
 ```
+
+Update product (if changing rateLimit be sure to use .checkPrice() first)
+
+```javascript
+megaport.product(1).update({
+name: 'name change'
+}).then(
+  function (response) {
+    output(response);
+  }
+);
+```
+
+Checking price on rateLimit changes
+
+```javascript
+megaport.product(1).checkPrice(1000).then(
+  function (response) {
+    output(response);
+  }
+);
+```
+
 
 ### Update Service Details by productId
 
