@@ -579,7 +579,7 @@ var mp = (function () {
   };
 
 
-  // building the ports obj
+  // building the ports array
   function srvcObj(obj) {
     var megaports = {};
     obj.map(function (e) {
@@ -587,7 +587,10 @@ var mp = (function () {
         megaports[m.productUid] = m;
       });
     });
-    return megaports;
+    var arr = Object.keys(megaports).map(function (key) {
+      return megaports[key];
+    });
+    return arr;
   }
 
   // que things that run prior to ready state;
