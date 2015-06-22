@@ -1,5 +1,6 @@
 /* jshint -W083, -W117  */
 var mp = (function () {
+  var cache = {};
   var exports = function (baseurl) {
     var innerthis = this;
     var onready = [],
@@ -389,9 +390,14 @@ var mp = (function () {
 
       return new Promise(function (resolve, reject) {
         q.onready(function () {
+          if (typeof cache[url] === 'object') {
+            resolve(cache[url].data || cache[url]);
+            return;
+          }
           xhr.get(baseurl + url, {}, innerthis.credentials.token)
             .then(
               function (d) {
+                cache[url] = d;
                 resolve(d.data || d);
               },
               function (d) {
