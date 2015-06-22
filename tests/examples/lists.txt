@@ -1,0 +1,9 @@
+megaport.lists('markets')
+  .then(function(list){
+    output(list);
+  });
+  
+//  megaport.lists('locations')
+//    .then(function(list){
+//      output(list);
+//    });

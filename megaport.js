@@ -377,6 +377,26 @@ var mp = (function () {
       });
     };
 
+    this.lists = function (name) {
+
+      // markets, locations
+
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
+          xhr.get(baseurl + '/dropdowns/' + name, {}, innerthis.credentials.token)
+            .then(
+              function (d) {
+                resolve(d.data || d);
+              },
+              function (d) {
+                console.log(d);
+              }
+            );
+        });
+      });
+    }
+
+
     this.markets = function (marketId) {
       return {
         update: function (obj) {
