@@ -381,9 +381,14 @@ var mp = (function () {
 
       // markets, locations
 
+      var url = '/dropdowns/' + name;
+
+      if (name == 'markets');
+      var url = /supplier
+
       return new Promise(function (resolve, reject) {
         q.onready(function () {
-          xhr.get(baseurl + '/dropdowns/' + name, {}, innerthis.credentials.token)
+          xhr.get(baseurl + url, {}, innerthis.credentials.token)
             .then(
               function (d) {
                 resolve(d.data || d);
