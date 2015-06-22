@@ -383,8 +383,9 @@ var mp = (function () {
 
       var url = '/dropdowns/' + name;
 
-      if (name == 'markets');
-      var url = /supplier
+      if (name == 'markets')
+        url = '/supplier';
+
 
       return new Promise(function (resolve, reject) {
         q.onready(function () {
