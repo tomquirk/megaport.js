@@ -163,7 +163,7 @@ var mp = (function () {
         create: function (obj) {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.post(baseurl + '/ticket', obj, innerthis.credentials.token)
+              xhr.jpost(baseurl + '/ticket', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
@@ -748,7 +748,8 @@ var mp = (function () {
 
         var rq = new XMLHttpRequest();
 
-        rq.open(method, url, true);
+        rq.open(method.replace('J', ''), url, true);
+
         rq.onload = function () {
           if (rq.status == 200) {
             resolve(JSON.parse(rq.responseText));
@@ -761,7 +762,10 @@ var mp = (function () {
           }
         };
         rq.onerror = function () {};
-        if (method == 'POST') {
+
+        switch (method) {
+
+        case 'POST':
           rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
           if (typeof params == 'object') {
             params = (function (obj) {
@@ -774,12 +778,41 @@ var mp = (function () {
             })(params);
           }
           rq.send(params);
-        } else if (method == 'PUT') {
+          break;
+        case 'JPOST':
           rq.setRequestHeader('Content-Type', 'application/json');
           rq.send(JSON.stringify(params));
-        } else {
+          break;
+
+        case 'PUT':
+          rq.setRequestHeader('Content-Type', 'application/json');
+          rq.send(JSON.stringify(params));
+          break;
+
+        default:
           rq.send();
+
         }
+
+        //        if (method == 'POST') {
+        //          rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        //          if (typeof params == 'object') {
+        //            params = (function (obj) {
+        //              var str = [];
+        //              for (var p in obj)
+        //                if (obj.hasOwnProperty(p))
+        //                  str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        //
+        //              return str.join("&");
+        //            })(params);
+        //          }
+        //          rq.send(params);
+        //        } else if (method == 'PUT') {
+        //          rq.setRequestHeader('Content-Type', 'application/json');
+        //          rq.send(JSON.stringify(params));
+        //        } else {
+        //          rq.send();
+        //        }
       });
     };
 
@@ -788,6 +821,9 @@ var mp = (function () {
     };
     this.post = function (url, params, token) {
       return innerthis.ajax('POST', url, params, token);
+    };
+    this.jpost = function (url, params, token) {
+      return innerthis.ajax('JPOST', url, params, token);
     };
     this.put = function (url, params, token) {
       return innerthis.ajax('PUT', url, params, token);
