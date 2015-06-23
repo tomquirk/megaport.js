@@ -163,7 +163,7 @@ var mp = (function () {
         create: function (obj) {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.jpost(baseurl + '/ticket', obj, innerthis.credentials.token)
+              xhr.post(baseurl + '/ticket', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
@@ -431,7 +431,7 @@ var mp = (function () {
           //  https://git.megaport.com/snippets/97
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.post(baseurl + '/market', obj, innerthis.credentials.token)
+              xhr.jpost(baseurl + '/market', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
