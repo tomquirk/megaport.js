@@ -387,6 +387,9 @@ var mp = (function () {
       if (name == 'markets')
         url = '/supplier';
 
+      if (name == 'locations')
+        url = '/locations';
+
 
       return new Promise(function (resolve, reject) {
         q.onready(function () {
