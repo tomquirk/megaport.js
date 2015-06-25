@@ -322,7 +322,7 @@ var mp = (function () {
             });
           });
         },
-        types: function (rateLimit) {
+        types: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
@@ -330,9 +330,7 @@ var mp = (function () {
                 var type = '/' + productObj.productType.toLowerCase();
                 if (type == '/megaport')
                   type = '';
-                xhr.get(baseurl + '/product' + type + '/' + productId + '/types', {
-                    rateLimit: rateLimit
-                  }, innerthis.credentials.token)
+                xhr.get(baseurl + '/product' + type + '/' + productId + '/types', {}, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
@@ -629,6 +627,7 @@ var mp = (function () {
   // building the ports array
   function srvcObj(obj) {
     var megaports = {};
+    if (typeof obj != 'object') return [];
     obj.map(function (e) {
       e.megaports.map(function (m) {
         megaports[m.productUid] = m;
