@@ -322,6 +322,30 @@ var mp = (function () {
             });
           });
         },
+        types: function (rateLimit) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              innerThis.then(function (productObj) {
+                var type = '/' + productObj.productType.toLowerCase();
+                if (type == '/megaport')
+                  type = '';
+                xhr.get(baseurl + '/product' + type + '/' + productId + '/types', {
+                    rateLimit: rateLimit
+                  }, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      console.log(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
         update: function (obj) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
@@ -361,23 +385,6 @@ var mp = (function () {
       };
     };
 
-    this.locations = function () {
-      // /v2/dropdowns/locations
-      return new Promise(function (resolve, reject) {
-        q.onready(function () {
-          xhr.get(baseurl + '/dropdowns/locations', {}, innerthis.credentials.token)
-            .then(
-              function (d) {
-                resolve(d.data || d);
-              },
-              function (d) {
-                console.log(d);
-              }
-            );
-        });
-      });
-    };
-
     this.lists = function (name) {
 
       // markets, locations
@@ -389,6 +396,11 @@ var mp = (function () {
 
       if (name == 'locations')
         url = '/locations';
+
+      if (name == 'partnerPorts')
+        url = '/dropdowns/partner/megaports';
+
+      // /v2/dropdowns/person/{personId}/megaports
 
 
       return new Promise(function (resolve, reject) {

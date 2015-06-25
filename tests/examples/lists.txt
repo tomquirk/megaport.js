@@ -7,3 +7,8 @@ megaport.lists('markets')
 //    .then(function(list){
 //      output(list);
 //    });
+
+//  megaport.lists('partnerPorts')
+//    .then(function(list){
+//      output(list);
+//    });
