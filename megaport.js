@@ -395,6 +395,9 @@ var mp = (function () {
       if (name == 'locations')
         url = '/locations';
 
+      if (name == 'ixtypes')
+        url = '/product/ix/types';
+
       if (name == 'partnerPorts')
         url = '/dropdowns/partner/megaports';
 
