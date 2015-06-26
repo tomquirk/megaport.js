@@ -292,6 +292,25 @@ var mp = (function () {
       });
     };
 
+    this.ixTypes = function (locationId) {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
+          xhr.get(baseurl + '/product/ix/types', {
+              locationId: locationId
+            }, innerthis.credentials.token)
+            .then(
+              function (d) {
+                resolve(d.data || d);
+              },
+              function (d) {
+                reject(d);
+                console.log(d);
+              }
+            );
+        });
+      });
+    }
+
 
 
     this.product = function (productId) {
@@ -394,9 +413,6 @@ var mp = (function () {
 
       if (name == 'locations')
         url = '/locations';
-
-      if (name == 'ixtypes')
-        url = '/product/ix/types';
 
       if (name == 'partnerPorts')
         url = '/dropdowns/partner/megaports';
