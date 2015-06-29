@@ -48,4 +48,8 @@ megaport.serviceOrder('530139c5-128c-433b-9a9a-a3807fbfd048').then(function(list
     output(list);
   });
   
+megaport.serviceOrder().then(function(list){
+    output(list);
+  });
+  
   

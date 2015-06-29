@@ -648,7 +648,18 @@ var mp = (function () {
         },
         then: function (resolve, reject) {
           q.onready(function () {
-            xhr.get(baseurl + '/serviceorder/' + serviceOrderUid, {}, innerthis.credentials.token)
+            var url, obj;
+            if (typeof serviceOrderUid == 'string') {
+              url = '/serviceorder/' + serviceOrderUid;
+              obj = {};
+            } else {
+              url = '/serviceorders';
+              obj = {
+                companyUid: innerthis.credentials.companyUid
+              };
+            }
+
+            xhr.get(baseurl + url, obj, innerthis.credentials.token)
               .then(
                 function (d) {
                   resolve(d.data || d);
