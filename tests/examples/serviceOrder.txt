@@ -1,0 +1,51 @@
+var srvOdr = [
+  {
+    "provisioningStatus": "DESIGN",
+    "productName": "Megaport Equinix SY1/2",
+    "productType": "MEGAPORT",
+    "createDate": 1375925486760,
+    "requestDate": 1436450400000,
+    "portSpeed": 10000,
+    "terminateDate": null,
+    "locationId": 2,
+    "trialAgreement": false,
+    "associatedVxcs": [
+      {
+        "productName": "SAU-86F72-PR",
+        "rateLimit": 1000,
+        "aEnd": {
+          "productName": "Megaport Equinix SY1/2",
+          "vlan": 0
+        },
+        "bEnd": {
+          "productUid": 573,
+          "productName": "Intabank Megaport at Equinix SY3",
+          "location": "Equinix SY3",
+          "vlan": 0
+        }
+      }
+    ],
+    "associatedIxs": [
+      {
+        "productName": "Megaport Equinix SY1/2",
+        "rateLimit": 200,
+        "status": "Active",
+        "macAddress": "de0c.7552.7e83",
+        "asn": 58944,
+        "networkServiceType": "Brisbane IX",
+        "location": "Equinix SY1/2"
+      }
+    ]
+  }
+];
+
+megaport.serviceOrder().save(srvOdr)
+  .then(function(list){
+    output(list);
+  });
+  
+megaport.serviceOrder('530139c5-128c-433b-9a9a-a3807fbfd048').then(function(list){
+    output(list);
+  });
+  
+  

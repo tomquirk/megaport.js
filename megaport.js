@@ -626,6 +626,43 @@ var mp = (function () {
     };
 
 
+    this.serviceOrder = function (serviceOrderUid) {
+      return {
+        save: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.jpost(baseurl + '/serviceorder', {
+                  serviceRequestObject: JSON.stringify(obj),
+                  companyUid: innerthis.credentials.companyUid
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                  }
+                );
+            });
+          });
+        },
+        then: function (resolve, reject) {
+          q.onready(function () {
+            xhr.get(baseurl + '/serviceorder/' + serviceOrderUid, {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data || d);
+                },
+                function (d) {
+                  reject(d);
+                }
+              );
+          });
+        }
+      }
+    };
+
+
     this.register = function (obj) {
       // https://git.megaport.com/snippets/82
       return new Promise(function (resolve, reject) {
@@ -784,10 +821,11 @@ var mp = (function () {
         rq.open(method.replace('J', ''), url, true);
 
         rq.onload = function () {
-          if (rq.status == 200) {
+          if (rq.status < 210) {
+
             resolve(JSON.parse(rq.responseText));
           }
-          if (rq.status > 200) {
+          if (rq.status > 210) {
             reject(JSON.parse(rq.responseText));
           }
           if (rq.status == 400) {
