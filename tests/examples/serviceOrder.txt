@@ -1,39 +1,45 @@
 var srvOdr = [
   {
+    "productUid": "95e4a420-1eed-11e5-82d8-63dc247490bc",
     "provisioningStatus": "DESIGN",
-    "productName": "Megaport Equinix SY1/2",
+    "productName": "Hello Megaport",
     "productType": "MEGAPORT",
-    "createDate": 1375925486760,
-    "requestDate": 1436450400000,
-    "portSpeed": 10000,
+    "createDate": 1435644147554,
+    "requestDate": 1435644147554,
+    "portSpeed": 1000,
     "terminateDate": null,
-    "locationId": 2,
+    "locationId": 41,
+    "market": "AU",
     "trialAgreement": false,
     "associatedVxcs": [
       {
-        "productName": "SAU-86F72-PR",
+        "productUid": "a7d4ed20-1eed-11e5-82d8-63dc247490bc",
+        "provisioningStatus": "DESIGN",
+        "productName": "Hello VXC",
         "rateLimit": 1000,
         "aEnd": {
-          "productName": "Megaport Equinix SY1/2",
-          "vlan": 0
+          "vlan": 154,
+          "locationId": 41,
+          "productName": "Hello Megaport"
         },
         "bEnd": {
-          "productUid": 573,
-          "productName": "Intabank Megaport at Equinix SY3",
-          "location": "Equinix SY3",
-          "vlan": 0
+          "productUid": "c6001243-752f-4e6d-82e1-32afb4ed5e93",
+          "vlan": 4512,
+          "locationId": 35,
+          "productName": "10 Gbps Megaport Brisbane"
         }
       }
     ],
     "associatedIxs": [
       {
-        "productName": "Megaport Equinix SY1/2",
-        "rateLimit": 200,
-        "status": "Active",
-        "macAddress": "de0c.7552.7e83",
-        "asn": 58944,
-        "networkServiceType": "Brisbane IX",
-        "location": "Equinix SY1/2"
+        "productUid": "4e3a9520-1eee-11e5-82d8-63dc247490bc",
+        "provisioningStatus": "DESIGN",
+        "productName": "Hello Ix",
+        "rateLimit": 333333,
+        "asn": 4875,
+        "vlan": 33333,
+        "macAddress": 3333333,
+        "locationId": 41
       }
     ]
   }
@@ -42,6 +48,8 @@ var srvOdr = [
 megaport.serviceOrder().save(srvOdr)
   .then(function(list){
     output(list);
+  }, function(e){
+      output(e);
   });
   
 megaport.serviceOrder('530139c5-128c-433b-9a9a-a3807fbfd048').then(function(list){
