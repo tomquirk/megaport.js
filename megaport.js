@@ -628,21 +628,44 @@ var mp = (function () {
 
     this.serviceOrder = function (serviceOrderUid) {
       return {
-        save: function (obj) {
+        save: function (title, obj) {
+
+          var sendObj = {
+            companyUid: innerthis.credentials.companyUid
+          };
+          if (typeof title == 'string') {
+            sendObj.title = title;
+            sendObj.serviceRequestObject = JSON.stringify(obj);
+          } else {
+            sendObj.serviceRequestObject = JSON.stringify(title);
+            if (typeof serviceOrderUid != 'string') {
+              sendObj.title = 'untitled';
+            }
+          }
+
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.jpost(baseurl + '/serviceorder', {
-                  serviceRequestObject: JSON.stringify(obj),
-                  companyUid: innerthis.credentials.companyUid
-                }, innerthis.credentials.token)
-                .then(
-                  function (d) {
-                    resolve(d.data || d);
-                  },
-                  function (d) {
-                    reject(d);
-                  }
-                );
+              if (typeof serviceOrderUid == 'string') {
+                xhr.put(baseurl + '/serviceorder/' + serviceOrderUid, sendObj, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                    }
+                  );
+              } else {
+                xhr.jpost(baseurl + '/serviceorder', sendObj, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                    }
+                  );
+              }
             });
           });
         },
