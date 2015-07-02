@@ -279,8 +279,8 @@ megaport.priceBook()
     locationId: 2, //int
     speed: 1000, //int
     term: 1 // months (not required)
-  }).then(function(megaports){
-    output(megaports);
+  }).then(function(priceobj){
+    output(priceobj);
   });
 ```
 
@@ -290,8 +290,8 @@ megaport.priceBook()
     aLocationId: 2,
     bLocationId: 3,
     speed: 1000
-  }).then(function(megaports){
-    output(megaports);
+  }).then(function(priceobj){
+    output(priceobj);
   });
 ```
 
@@ -301,8 +301,8 @@ megaport.priceBook()
     portLocationId: 6,
     ixType: "Brisbane IX",
     speed: 1000
-  }).then(function(megaports){
-    output(megaports);
+  }).then(function(priceobj){
+    output(priceobj);
   });
 ```
 
