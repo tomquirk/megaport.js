@@ -271,3 +271,39 @@ megaport.product(productUid).checkPrice(1000).then(
 );
 ```
 
+### Price Book
+
+```javascript
+megaport.priceBook()
+  .megaport({
+    locationId: 2, //int
+    speed: 1000, //int
+    term: 1 // months (not required)
+  }).then(function(megaports){
+    output(megaports);
+  });
+```
+
+```javascript
+megaport.priceBook()
+  .vxc({
+    aLocationId: 2,
+    bLocationId: 3,
+    speed: 1000
+  }).then(function(megaports){
+    output(megaports);
+  });
+```
+
+```javascript
+megaport.priceBook()
+  .ix({
+    portLocationId: 6,
+    ixType: "Brisbane IX",
+    speed: 1000
+  }).then(function(megaports){
+    output(megaports);
+  });
+```
+
+

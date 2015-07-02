@@ -625,6 +625,59 @@ var mp = (function () {
       };
     };
 
+    this.priceBook = function () {
+      return {
+        megaport: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/pricebook/megaport', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        vxc: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/pricebook/vxc', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        ix: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/pricebook/ix', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        }
+      }
+    }
+
 
     this.serviceOrder = function (serviceOrderUid) {
       return {
