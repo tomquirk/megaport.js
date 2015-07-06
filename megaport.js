@@ -725,7 +725,7 @@ var mp = (function () {
         deploy: function () {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.put(baseurl + '/serviceorder/process', {
+              xhr.post(baseurl + '/serviceorder/process', {
                   serviceOrderId: serviceOrderUid
                 }, innerthis.credentials.token)
                 .then(
