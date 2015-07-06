@@ -726,7 +726,8 @@ var mp = (function () {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
               xhr.post(baseurl + '/serviceorder/process', {
-                  serviceOrderId: serviceOrderUid
+                  serviceOrderId: serviceOrderUid,
+                  serviceOrderStatus: 'ACCEPTED'
                 }, innerthis.credentials.token)
                 .then(
                   function (d) {
