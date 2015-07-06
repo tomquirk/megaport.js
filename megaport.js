@@ -722,6 +722,23 @@ var mp = (function () {
             });
           });
         },
+        deploy: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/serviceorder/process', {
+                  serviceOrderId: serviceOrderUid
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                  }
+                );
+            });
+          });
+        },
         then: function (resolve, reject) {
           q.onready(function () {
             var url, obj;
@@ -734,7 +751,6 @@ var mp = (function () {
                 companyUid: innerthis.credentials.companyUid
               };
             }
-
             xhr.get(baseurl + url, obj, innerthis.credentials.token)
               .then(
                 function (d) {
