@@ -309,7 +309,7 @@ var mp = (function () {
             );
         });
       });
-    }
+    };
 
 
 
@@ -350,6 +350,27 @@ var mp = (function () {
                 if (type == '/megaport')
                   type = '';
                 xhr.get(baseurl + '/product' + type + '/' + productId + '/types', {}, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      console.log(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
+        graph: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              innerThis.then(function () {
+                xhr.get(baseurl + '/graph/', {
+                    productUid: productId
+                  }, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
@@ -438,7 +459,7 @@ var mp = (function () {
             );
         });
       });
-    }
+    };
 
 
     this.markets = function (marketId) {
@@ -675,8 +696,8 @@ var mp = (function () {
             });
           });
         }
-      }
-    }
+      };
+    };
 
 
     this.serviceOrder = function (serviceOrderUid) {
@@ -763,7 +784,7 @@ var mp = (function () {
               );
           });
         }
-      }
+      };
     };
 
 

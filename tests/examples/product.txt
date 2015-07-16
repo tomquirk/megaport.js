@@ -1,10 +1,20 @@
 // Works for all (megaport, vxc, ix)
 
+var productUid = '81979a48-3d80-4a65-81e4-06c5d63109a2';
+
 megaport.product(productUid).then(
   function (product) {
-    console.log(product);
+    output(product);
   }
 );
+
+// graph data
+
+// megaport.product(productUid).graph().then(
+//   function (product) {
+//     output(product);
+//   }
+// );
 
 // Update product (if changing rateLimit be sure to use .checkPrice() first)
 
