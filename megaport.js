@@ -631,7 +631,7 @@ var mp = (function () {
         },
         then: function (resolve, reject) {
           q.onready(function () {
-            xhr.put(baseurl + '/employee/' + innerthis.credentials.personId, {}, innerthis.credentials.token)
+            xhr.get(baseurl + '/employee/' + innerthis.credentials.personId, {}, innerthis.credentials.token)
               .then(
                 function (d) {
                   resolve(d.data || d);
