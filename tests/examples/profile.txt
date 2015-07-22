@@ -15,3 +15,12 @@ megaport.profile().then(
 //      output(response);
 //    }
 //  );
+
+//  megaport.profile().changePassword({
+//    oldPassword: '',
+//    newPassword: ''  
+//  }).then(
+//    function (response) {
+//      output(response);
+//    }
+//  );

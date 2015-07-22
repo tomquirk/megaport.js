@@ -620,10 +620,27 @@ var mp = (function () {
               xhr.put(baseurl + '/employee/' + innerthis.credentials.personId, obj, innerthis.credentials.token)
                 .then(
                   function (d) {
-                    resolve(d);
+                    resolve(d.data || d);
                   },
                   function (d) {
                     reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        changePassword: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/password/change' + innerthis.credentials.personId, obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
                   }
                 );
             });
