@@ -633,7 +633,7 @@ var mp = (function () {
         changePassword: function (obj) {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.post(baseurl + '/password/change' + innerthis.credentials.personId, obj, innerthis.credentials.token)
+              xhr.post(baseurl + '/password/change/' + innerthis.credentials.personId, obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
