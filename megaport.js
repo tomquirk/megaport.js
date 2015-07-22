@@ -54,6 +54,25 @@ var mp = (function () {
       );
     };
 
+    this.logout = function () {
+      var innerThis = this;
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
+          xhr.post(baseurl + '/logout', {}, innerthis.credentials.token)
+            .then(
+              function (d) {
+                this.credentials = {};
+                resolve(d.data || d);
+              },
+              function (d) {
+                reject(d);
+                console.log(d);
+              }
+            );
+        });
+      });
+    };
+
     // /secure/dropdowns/locations
     this.ready = function (cb) {
       onready.push(cb);
