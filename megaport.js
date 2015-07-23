@@ -58,7 +58,7 @@ var mp = (function () {
       var innerThis = this;
       return new Promise(function (resolve, reject) {
         q.onready(function () {
-          xhr.post(baseurl + '/logout', {}, innerthis.credentials.token)
+          xhr.get(baseurl + '/logout', {}, innerthis.credentials.token)
             .then(
               function (d) {
                 this.credentials = {};
