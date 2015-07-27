@@ -587,7 +587,7 @@ var mp = (function () {
         employ: function (obj) {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.post(baseurl + '/employment', obj, innerthis.credentials.token)
+              xhr.jpost(baseurl + '/employment', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
