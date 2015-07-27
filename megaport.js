@@ -682,6 +682,41 @@ var mp = (function () {
       };
     };
 
+    this.employee = function (id) {
+      return {
+        update: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/employee/' + id, obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        then: function (resolve, reject) {
+          q.onready(function () {
+            xhr.get(baseurl + '/employee/' + id, {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data || d);
+                },
+                function (d) {
+                  reject(d);
+                  console.log(d);
+                }
+              );
+          });
+        }
+      };
+    };
+
     this.priceBook = function () {
       return {
         megaport: function (obj) {
