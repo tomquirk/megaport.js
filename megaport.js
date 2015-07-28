@@ -814,6 +814,22 @@ var mp = (function () {
             });
           });
         },
+        validate: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/serviceorder/process', {serviceOrderId: serviceOrderUid,
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                  }
+                );
+            });
+          });
+        },
         deploy: function () {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
@@ -961,7 +977,6 @@ var mp = (function () {
         } else {
           handler.reject(value);
         }
-
         return;
       }
 
