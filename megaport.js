@@ -817,7 +817,8 @@ var mp = (function () {
         validate: function () {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.post(baseurl + '/serviceorder/process', {serviceOrderId: serviceOrderUid,
+              xhr.post(baseurl + '/serviceorder/validate', {
+                  serviceOrderId: serviceOrderUid,
                 }, innerthis.credentials.token)
                 .then(
                   function (d) {
