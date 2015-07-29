@@ -831,7 +831,7 @@ var mp = (function () {
         pdf: function (invoiceId) {
           return {
             then: function (func) {
-              func(baseurl + '/invoice/' + invoiceId + '/pdf');
+              func(baseurl + '/invoice/' + invoiceId + '/pdf?token=' + innerthis.credentials.token);
             }
           };
         },
