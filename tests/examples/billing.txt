@@ -1,0 +1,19 @@
+// lists billed invoices for 
+megaport.invoices().then(
+  function (m) {
+    output(m);
+  }
+);
+
+//  megaport.invoices().invoice(invoiceId).then(
+//    function (m) {
+//      output(m);
+//    }
+//  );
+
+
+//  megaport.invoices().pdf(invoiceId).then(
+//    function (m) {
+//      output(m);
+//    }
+//  );

@@ -5,6 +5,7 @@ var mp = (function () {
     var innerthis = this;
     var onready = [],
       failauth, authUrl, authParams;
+    this.baseurl = baseurl;
     this.credentials = {};
 
 
@@ -57,6 +58,7 @@ var mp = (function () {
     this.logout = function () {
       var innerThis = this;
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         q.onready(function () {
           xhr.get(baseurl + '/logout', {}, innerthis.credentials.token)
             .then(
@@ -93,6 +95,7 @@ var mp = (function () {
 
     this.dashboard = function (ext) {
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         q.onready(function () {
           xhr.get(baseurl + '/dashboard' + (ext ? '/' + ext : ''), {}, innerthis.credentials.token)
             .then(
@@ -110,6 +113,7 @@ var mp = (function () {
 
     this.menuStats = function () {
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         q.onready(function () {
           xhr.get(baseurl + '/menuStats', {}, innerthis.credentials.token)
             .then(
@@ -129,6 +133,7 @@ var mp = (function () {
       return {
         filter: function (status) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/ticket', {
                   status: status || 'ANY'
@@ -147,6 +152,7 @@ var mp = (function () {
         },
         comment: function (message) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.post(baseurl + '/ticket/' + ticketId + '/comment', {
                   comment: message
@@ -165,6 +171,7 @@ var mp = (function () {
         },
         close: function () {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.put(baseurl + '/ticket/' + ticketId + '/close', {}, innerthis.credentials.token)
                 .then(
@@ -181,6 +188,7 @@ var mp = (function () {
         },
         create: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.post(baseurl + '/ticket', obj, innerthis.credentials.token)
                 .then(
@@ -196,6 +204,7 @@ var mp = (function () {
           });
         },
         then: (ticketId ? function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/ticket/' + ticketId, {}, innerthis.credentials.token)
               .then(
@@ -209,6 +218,7 @@ var mp = (function () {
               );
           });
         } : function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/ticket', {
                 status: 'ANY'
@@ -233,6 +243,7 @@ var mp = (function () {
       if (peerid && rsid && productid)
         url = '/ixp/' + peerid + '/' + rsid + '/product/' + productid + '/prefixes';
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         q.onready(function () {
           xhr.get(baseurl + url, {}, innerthis.credentials.token)
             .then(
@@ -261,6 +272,7 @@ var mp = (function () {
         pObj.from = pObj.to - 86400000;
 
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         q.onready(function () {
           xhr.get(baseurl + url, pObj, innerthis.credentials.token)
             .then(
@@ -279,6 +291,7 @@ var mp = (function () {
 
     this.servicegroups = function () {
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         q.onready(function () {
           xhr.get(baseurl + '/servicegroups', {}, innerthis.credentials.token)
             .then(
@@ -296,6 +309,7 @@ var mp = (function () {
 
     this.ports = function () {
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         q.onready(function () {
           xhr.get(baseurl + '/servicegroups', {}, innerthis.credentials.token)
             .then(
@@ -313,6 +327,7 @@ var mp = (function () {
 
     this.ixTypes = function (locationId) {
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         q.onready(function () {
           xhr.get(baseurl + '/product/ix/types', {
               locationId: locationId
@@ -339,6 +354,7 @@ var mp = (function () {
         checkPrice: function (rateLimit) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function (productObj) {
                 var type = '/' + productObj.productType.toLowerCase();
@@ -363,6 +379,7 @@ var mp = (function () {
         types: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function (productObj) {
                 var type = '/' + productObj.productType.toLowerCase();
@@ -385,6 +402,7 @@ var mp = (function () {
         graph: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function () {
                 xhr.get(baseurl + '/graph/', {
@@ -406,6 +424,7 @@ var mp = (function () {
         update: function (obj) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function (productObj) {
                 var type = '/' + productObj.productType.toLowerCase();
@@ -426,6 +445,7 @@ var mp = (function () {
           });
         },
         then: function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/product/' + productId, {}, innerthis.credentials.token)
               .then(
@@ -461,6 +481,7 @@ var mp = (function () {
 
 
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         q.onready(function () {
           if (typeof cache[url] === 'object') {
             resolve(cache[url].data || cache[url]);
@@ -485,6 +506,7 @@ var mp = (function () {
       return {
         update: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.put(baseurl + '/market/' + marketId, obj, innerthis.credentials.token)
                 .then(
@@ -502,6 +524,7 @@ var mp = (function () {
         create: function (obj) {
           //  https://git.megaport.com/snippets/97
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.jpost(baseurl + '/market', obj, innerthis.credentials.token)
                 .then(
@@ -518,6 +541,7 @@ var mp = (function () {
         },
         delete: {}, // needs to be written
         then: (marketId ? function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/market/' + marketId, {}, innerthis.credentials.token)
               .then(
@@ -531,6 +555,7 @@ var mp = (function () {
               );
           });
         } : function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/market', {}, innerthis.credentials.token)
               .then(
@@ -552,6 +577,7 @@ var mp = (function () {
       return {
         update: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.put(baseurl + '/company', obj, innerthis.credentials.token)
                 .then(
@@ -566,6 +592,7 @@ var mp = (function () {
           });
         },
         then: function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/company', {}, innerthis.credentials.token)
               .then(
@@ -586,6 +613,7 @@ var mp = (function () {
       return {
         employ: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.jpost(baseurl + '/employment', obj, innerthis.credentials.token)
                 .then(
@@ -602,6 +630,7 @@ var mp = (function () {
         },
         delete: {}, // needs to be written
         then: (employmentId ? function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/employment/' + employmentId, {}, innerthis.credentials.token)
               .then(
@@ -615,6 +644,7 @@ var mp = (function () {
               );
           });
         } : function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/employment', {}, innerthis.credentials.token)
               .then(
@@ -635,6 +665,7 @@ var mp = (function () {
       return {
         update: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.put(baseurl + '/employee/' + innerthis.credentials.personId, obj, innerthis.credentials.token)
                 .then(
@@ -651,6 +682,7 @@ var mp = (function () {
         },
         changePassword: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.post(baseurl + '/password/change/' + innerthis.credentials.personId, obj, innerthis.credentials.token)
                 .then(
@@ -666,6 +698,7 @@ var mp = (function () {
           });
         },
         then: function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/employee/' + innerthis.credentials.personId, {}, innerthis.credentials.token)
               .then(
@@ -686,6 +719,7 @@ var mp = (function () {
       return {
         update: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.put(baseurl + '/employee/' + id, obj, innerthis.credentials.token)
                 .then(
@@ -701,6 +735,7 @@ var mp = (function () {
           });
         },
         then: function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             xhr.get(baseurl + '/employee/' + id, {}, innerthis.credentials.token)
               .then(
@@ -721,6 +756,7 @@ var mp = (function () {
       return {
         megaport: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/pricebook/megaport', obj, innerthis.credentials.token)
                 .then(
@@ -737,6 +773,7 @@ var mp = (function () {
         },
         vxc: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/pricebook/vxc', obj, innerthis.credentials.token)
                 .then(
@@ -753,6 +790,7 @@ var mp = (function () {
         },
         ix: function (obj) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/pricebook/ix', obj, innerthis.credentials.token)
                 .then(
@@ -765,6 +803,51 @@ var mp = (function () {
                   }
                 );
             });
+          });
+        }
+      };
+    };
+
+    this.invoices = function (marketId, companyId) {
+      companyId = companyId || this.credentials.companyId;
+      return {
+        invoice: function (invoiceId) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/invoice/' + invoiceId, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        pdf: function (invoiceId) {
+          return new Promise(function (resolve, reject) {
+            resolve(baseurl + '/invoice/' + invoiceId + '/pdf');
+          });
+        },
+        then: function (resolve, reject) {
+          reject = reject || function () {};
+          q.onready(function () {
+            xhr.get(baseurl + '/invoice', {
+                companyId: companyId
+              }, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data || d);
+                },
+                function (d) {
+                  reject(d);
+                  console.log(d);
+                }
+              );
           });
         }
       };
@@ -789,6 +872,7 @@ var mp = (function () {
           }
 
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               if (typeof serviceOrderUid == 'string') {
                 xhr.put(baseurl + '/serviceorder/' + serviceOrderUid, sendObj, innerthis.credentials.token)
@@ -814,8 +898,25 @@ var mp = (function () {
             });
           });
         },
+        delete: function () {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.delete(baseurl + '/serviceorder/validate', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                  }
+                );
+            });
+          });
+        },
         validate: function () {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.post(baseurl + '/serviceorder/validate', {
                   serviceOrderId: serviceOrderUid,
@@ -831,12 +932,14 @@ var mp = (function () {
             });
           });
         },
-        deploy: function () {
+        deploy: function (promoCodes) {
           return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
             q.onready(function () {
               xhr.post(baseurl + '/serviceorder/process', {
                   serviceOrderId: serviceOrderUid,
-                  serviceOrderStatus: 'ACCEPTED'
+                  serviceOrderStatus: 'ACCEPTED',
+                  promoCodes: promoCodes
                 }, innerthis.credentials.token)
                 .then(
                   function (d) {
@@ -850,6 +953,7 @@ var mp = (function () {
           });
         },
         then: function (resolve, reject) {
+          reject = reject || function () {};
           q.onready(function () {
             var url, obj;
             if (typeof serviceOrderUid == 'string') {
@@ -879,6 +983,7 @@ var mp = (function () {
     this.register = function (obj) {
       // https://git.megaport.com/snippets/82
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         xhr.post(baseurl + '/social/registration', obj)
           .then(
             function (d) {
@@ -987,6 +1092,7 @@ var mp = (function () {
 
     this.then = function (onResolved, onRejected) {
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         handle({
           onResolved: onResolved,
           onRejected: onRejected,
@@ -1008,6 +1114,7 @@ var mp = (function () {
 
     this.ajax = function (method, url, params, token) {
       return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
         method = method.toUpperCase();
 
         if (typeof token == 'string')
