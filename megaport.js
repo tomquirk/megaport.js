@@ -829,9 +829,11 @@ var mp = (function () {
           });
         },
         pdf: function (invoiceId) {
-          return new Promise(function (resolve, reject) {
-            resolve(baseurl + '/invoice/' + invoiceId + '/pdf');
-          });
+          return {
+            then: function (func) {
+              func(baseurl + '/invoice/' + invoiceId + '/pdf');
+            }
+          };
         },
         then: function (resolve, reject) {
           reject = reject || function () {};
