@@ -39,7 +39,8 @@ var srvOdr = [
         "asn": 4875,
         "vlan": 33333,
         "macAddress": 3333333,
-        "locationId": 41
+        "locationId": 41,
+        "networkServiceType": "Brisbane IX"
       }
     ]
   }
