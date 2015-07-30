@@ -855,6 +855,25 @@ var mp = (function () {
       };
     };
 
+    this.promoCode = function (code) {
+      return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
+        q.onready(function () {
+          xhr.get(baseurl + '/promocode', {
+              promoCode: code
+            }, innerthis.credentials.token)
+            .then(
+              function (d) {
+                resolve(d.data || d);
+              },
+              function (d) {
+                reject(d);
+                console.log(d);
+              }
+            );
+        });
+      });
+    };
 
     this.serviceOrder = function (serviceOrderUid) {
       return {
