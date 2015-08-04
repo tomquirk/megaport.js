@@ -131,7 +131,7 @@ var mp = (function () {
 
     this.agency = function (agencyId) {
       return {
-        customers: function () {
+        agents: function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
