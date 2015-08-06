@@ -130,6 +130,7 @@ var mp = (function () {
     };
 
     this.agency = function (agencyId) {
+      agencyId = agencyId || innerthis.credentials.companyUid;
       return {
         agents: function () {
           return new Promise(function (resolve, reject) {
@@ -914,12 +915,12 @@ var mp = (function () {
       });
     };
 
-    this.serviceOrder = function (serviceOrderUid) {
+    this.serviceOrder = function (serviceOrderUid, companyUid) {
       return {
         save: function (title, obj) {
 
           var sendObj = {
-            companyUid: innerthis.credentials.companyUid
+            companyUid: companyUid || innerthis.credentials.companyUid
           };
           if (typeof title == 'string') {
             sendObj.title = title;
@@ -1022,7 +1023,7 @@ var mp = (function () {
             } else {
               url = '/serviceorders';
               obj = {
-                companyUid: innerthis.credentials.companyUid
+                companyUid: companyUid || innerthis.credentials.companyUid
               };
             }
             xhr.get(baseurl + url, obj, innerthis.credentials.token)
@@ -1241,7 +1242,6 @@ var mp = (function () {
 
         default:
           rq.send();
-
         }
 
         //        if (method == 'POST') {
