@@ -132,7 +132,58 @@ var mp = (function () {
     this.agency = function (agencyId) {
       agencyId = agencyId || innerthis.credentials.companyUid;
       return {
-        agents: function () {
+        createCustomer: function (custObj) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.jpost(baseurl + '/agency/' + agencyId + '/customer', custObj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        customers: function () {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/agency/' + agencyId + '/customer', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        agent: function () {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/agency/' + agencyId + '/agent', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        agentOverview: function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
@@ -153,7 +204,7 @@ var mp = (function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
-              xhr.get(baseurl + '/agency/' + agencyId + '/subagency/overview', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/agency/' + agencyId + '/subagency', {}, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
@@ -166,6 +217,23 @@ var mp = (function () {
             });
           });
         },
+        subAgenciesOverview: function () {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/agency/' + agencyId + '/subagency/overview', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        }
       };
     };
 
