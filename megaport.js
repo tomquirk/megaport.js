@@ -1068,7 +1068,7 @@ var mp = (function () {
               xhr.post(baseurl + '/serviceorder/process', {
                   serviceOrderId: serviceOrderUid,
                   serviceOrderStatus: 'ACCEPTED',
-                  promoCodes: promoCodes
+                  promoCodes: JSON.stringify(promoCodes)
                 }, innerthis.credentials.token)
                 .then(
                   function (d) {
