@@ -238,7 +238,7 @@ var mp = (function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
-              xhr.get(baseurl + '/agency/' + agencyId + '/subagency', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/agency/' + agencyId + '/subAgency', {}, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
@@ -255,7 +255,7 @@ var mp = (function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
-              xhr.get(baseurl + '/agency/' + agencyId + '/subagency/overview', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/agency/' + agencyId + '/subAgency/overview', {}, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
