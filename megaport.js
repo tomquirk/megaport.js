@@ -166,6 +166,23 @@ var mp = (function () {
             });
           });
         },
+        createAgent: function (agentObj) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.jpost(baseurl + '/agency/' + agencyId + '/agent', agentObj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
         agent: function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
@@ -188,6 +205,23 @@ var mp = (function () {
             reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/agency/' + agencyId + '/agent/overview', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
+        createSubAgency: function (agencyObj) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.jpost(baseurl + '/agency/' + agencyId + '/subAgency', agencyObj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);

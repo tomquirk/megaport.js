@@ -306,4 +306,33 @@ megaport.priceBook()
   });
 ```
 
+### Agencies
 
+```javascript
+megaport.agency()
+  .createAgent(
+    {
+      "firstName":"agent",
+      "lastName":"agent",
+      "email":"agent2@test.com",
+      "securityRoles":["agentMarketingAdmin"] "companyAdmin", "agentAdmin", "agentMarketingAdmin"
+    }
+  );
+```
+
+```javascript
+megaport.agency()
+  .createSubAgency({
+    "companyDto":
+      {
+        "legalName":"sub agency 1"
+      },
+      "userDto": {
+        "firstName":"test",
+        "lastName":"test",
+        "email":"test@test.com"
+      }
+    }).then(function(res){
+    output(res);
+  });
+```
