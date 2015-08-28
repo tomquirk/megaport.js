@@ -1309,7 +1309,8 @@ var mp = (function () {
           }
           if (rq.status > 210) {
             reject({
-              data: JSON.parse(rq.responseText, status: rq.status)
+              status: rq.status,
+              data: JSON.parse(rq.responseText)
             });
           }
           if (rq.status == 400) {
