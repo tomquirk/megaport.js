@@ -1,6 +1,9 @@
 var agencyId = megaport.credentials.companyUid;
 
-megaport.agency().commissionReport().then(
+megaport.agency().commissionReport({
+  month: 9,
+  year: 2015
+}).then(
   function (list) {
     output(list);
   }
