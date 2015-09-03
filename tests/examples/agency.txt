@@ -1,10 +1,16 @@
 var agencyId = megaport.credentials.companyUid;
 
-megaport.agency(agencyId).customers().then(
+megaport.agency().commissionReport().then(
   function (list) {
     output(list);
   }
 );
+
+// megaport.agency(agencyId).customers().then(
+// function (list) {
+//     output(list);
+//   }
+// );
 
 //  megaport.agency(agencyId).subAgencies().then(
 //    function (list) {

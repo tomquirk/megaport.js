@@ -267,7 +267,28 @@ var mp = (function () {
                 );
             });
           });
+        },
+        commissionReport: function () {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/agency/' + agencyId + '/commissionReport', {
+                  billingMonth: 9,
+                  billingYear: 2015
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
         }
+
       };
     };
 
