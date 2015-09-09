@@ -268,13 +268,14 @@ var mp = (function () {
             });
           });
         },
-        commissionReport: function () {
+        commissionReport: function (obj) {
+          obj = obj || {};
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/agency/' + agencyId + '/commissionReport', {
-                  billingMonth: 9,
-                  billingYear: 2015
+                  billingMonth: obj.month,
+                  billingYear: obj.year
                 }, innerthis.credentials.token)
                 .then(
                   function (d) {
