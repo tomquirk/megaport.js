@@ -1,13 +1,11 @@
 var agencyId = megaport.credentials.companyUid;
 
-megaport.agency().commissionReport({
+var hey = megaport.agency().commissionReportCsv({
   month: 9,
   year: 2015
-}).then(
-  function (list) {
-    output(list);
-  }
-);
+});
+
+console.log(hey);
 
 // megaport.agency(agencyId).customers().then(
 // function (list) {
@@ -20,3 +18,6 @@ megaport.agency().commissionReport({
 //      output(list);
 //    }
 //  );
+
+
+

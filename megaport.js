@@ -268,6 +268,20 @@ var mp = (function () {
             });
           });
         },
+        commissionReportCsv: function (obj) {
+          obj = obj || {};
+          var querystr = (function (obj) {
+            var str = [];
+            for (var p in obj)
+              if (obj.hasOwnProperty(p))
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            return str.join("&");
+          })({
+            billingMonth: obj.month,
+            billingYear: obj.year
+          });
+          return baseurl + '/agency/' + agencyId + '/commissionReport?token=' + innerthis.credentials.token + '&' + querystr
+        },
         commissionReport: function (obj) {
           obj = obj || {};
           return new Promise(function (resolve, reject) {
@@ -289,7 +303,6 @@ var mp = (function () {
             });
           });
         }
-
       };
     };
 
