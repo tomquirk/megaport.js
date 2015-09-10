@@ -750,7 +750,7 @@ var mp = (function () {
     };
 
 
-    this.company = function (obj) {
+    this.company = function (companyUid) {
       return {
         update: function (obj) {
           return new Promise(function (resolve, reject) {
@@ -770,8 +770,9 @@ var mp = (function () {
         },
         then: function (resolve, reject) {
           reject = reject || function () {};
+          companyUid = companyUid || innerthis.credentials.companyUid
           q.onready(function () {
-            xhr.get(baseurl + '/company', {}, innerthis.credentials.token)
+            xhr.get(baseurl + '/company/' + companyUid, {}, innerthis.credentials.token)
               .then(
                 function (d) {
                   resolve(d.data || d);
