@@ -280,7 +280,7 @@ var mp = (function () {
             billingMonth: obj.month,
             billingYear: obj.year
           });
-          return baseurl + '/agency/' + agencyId + '/commissionReport?token=' + innerthis.credentials.token + '&' + querystr
+          return baseurl + '/agency/' + agencyId + '/commissionReport/csv?token=' + innerthis.credentials.token + '&' + querystr
         },
         commissionReport: function (obj) {
           obj = obj || {};
