@@ -770,8 +770,8 @@ var mp = (function () {
         },
         then: function (resolve, reject) {
           reject = reject || function () {};
-          companyUid = companyUid || innerthis.credentials.companyUid
           q.onready(function () {
+            companyUid = companyUid || innerthis.credentials.companyUid
             xhr.get(baseurl + '/company/' + companyUid, {}, innerthis.credentials.token)
               .then(
                 function (d) {
