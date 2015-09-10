@@ -183,6 +183,23 @@ var mp = (function () {
             });
           });
         },
+        updateAgent: function (agentId, agentObj) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.put(baseurl + '/agent/' + agentId, agentObj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    console.log(d);
+                  }
+                );
+            });
+          });
+        },
         agent: function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
