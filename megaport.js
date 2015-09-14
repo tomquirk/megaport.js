@@ -4,7 +4,7 @@ var mp = (function () {
   var exports = function (baseurl) {
     var innerthis = this;
     var onready = [],
-      failauth, authUrl, authParams;
+      failauth, authUrl, authParams, errors;
     this.baseurl = baseurl;
     this.credentials = {};
 
@@ -68,7 +68,9 @@ var mp = (function () {
               },
               function (d) {
                 reject(d);
-                console.log(d);
+                if (typeof errors == 'function')
+                  errors(d);
+
               }
             );
         });
@@ -85,6 +87,10 @@ var mp = (function () {
 
     this.failauth = function (cb) {
       failauth = cb;
+    };
+
+    this.onerror = function (cb) {
+      errors = cb;
     };
 
     this.destroy = function (cb) {
@@ -104,7 +110,9 @@ var mp = (function () {
               },
               function (d) {
                 reject(d);
-                console.log(d);
+                if (typeof errors == 'function')
+                  errors(d);
+
               }
             );
         });
@@ -122,7 +130,9 @@ var mp = (function () {
               },
               function (d) {
                 reject(d);
-                console.log(d);
+                if (typeof errors == 'function')
+                  errors(d);
+
               }
             );
         });
@@ -143,7 +153,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -160,7 +171,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -177,7 +189,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -194,7 +207,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -211,7 +225,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -228,7 +243,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -245,7 +261,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -262,7 +279,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -279,7 +297,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -314,7 +333,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -338,7 +358,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -357,7 +378,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -374,7 +396,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -391,7 +414,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -407,7 +431,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -423,7 +448,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -446,7 +472,9 @@ var mp = (function () {
               },
               function (d) {
                 reject(d);
-                console.log(d);
+                if (typeof errors == 'function')
+                  errors(d);
+
               }
             );
         });
@@ -475,7 +503,9 @@ var mp = (function () {
               },
               function (d) {
                 reject(d);
-                console.log(d);
+                if (typeof errors == 'function')
+                  errors(d);
+
               }
             );
         });
@@ -494,7 +524,9 @@ var mp = (function () {
               },
               function (d) {
                 reject(d);
-                console.log(d);
+                if (typeof errors == 'function')
+                  errors(d);
+
               }
             );
         });
@@ -512,7 +544,9 @@ var mp = (function () {
               },
               function (d) {
                 reject(d);
-                console.log(d);
+                if (typeof errors == 'function')
+                  errors(d);
+
               }
             );
         });
@@ -532,7 +566,8 @@ var mp = (function () {
               },
               function (d) {
                 reject(d);
-                console.log(d);
+                if (typeof errors == 'function')
+                  errors(d);
               }
             );
         });
@@ -563,7 +598,8 @@ var mp = (function () {
                     },
                     function (d) {
                       reject(d);
-                      console.log(d);
+                      if (typeof errors == 'function')
+                        errors(d);
                     }
                   );
               });
@@ -586,7 +622,8 @@ var mp = (function () {
                     },
                     function (d) {
                       reject(d);
-                      console.log(d);
+                      if (typeof errors == 'function')
+                        errors(d);
                     }
                   );
               });
@@ -608,7 +645,8 @@ var mp = (function () {
                     },
                     function (d) {
                       reject(d);
-                      console.log(d);
+                      if (typeof errors == 'function')
+                        errors(d);
                     }
                   );
               });
@@ -631,7 +669,8 @@ var mp = (function () {
                     },
                     function (d) {
                       reject(d);
-                      console.log(d);
+                      if (typeof errors == 'function')
+                        errors(d);
                     }
                   );
               });
@@ -648,7 +687,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -709,7 +749,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -727,7 +768,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -744,7 +786,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -758,7 +801,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -796,7 +840,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -817,7 +862,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -834,7 +880,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -848,7 +895,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -869,7 +917,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -886,7 +935,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -902,7 +952,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -923,7 +974,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -939,7 +991,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -960,7 +1013,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -977,7 +1031,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -994,7 +1049,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -1017,7 +1073,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
-                    console.log(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -1042,7 +1099,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
-                  console.log(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -1063,7 +1121,9 @@ var mp = (function () {
               },
               function (d) {
                 reject(d);
-                console.log(d);
+                if (typeof errors == 'function')
+                  errors(d);
+
               }
             );
         });
@@ -1163,6 +1223,8 @@ var mp = (function () {
                   },
                   function (d) {
                     reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
                   }
                 );
             });
@@ -1188,6 +1250,8 @@ var mp = (function () {
                 },
                 function (d) {
                   reject(d);
+                  if (typeof errors == 'function')
+                    errors(d);
                 }
               );
           });
@@ -1207,6 +1271,8 @@ var mp = (function () {
             },
             function (d) {
               reject(d);
+              if (typeof errors == 'function')
+                errors(d);
             }
           );
       });
@@ -1357,7 +1423,6 @@ var mp = (function () {
 
         rq.onload = function () {
           if (rq.status < 210) {
-
             resolve(JSON.parse(rq.responseText));
           }
           if (rq.status > 210) {
