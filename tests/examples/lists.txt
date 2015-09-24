@@ -12,3 +12,7 @@ megaport.lists('markets')
 //    .then(function(list){
 //      output(list);
 //    });
+
+megaport.ixTypes(34).then(function(){
+  output(list);
+});

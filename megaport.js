@@ -1139,9 +1139,9 @@ var mp = (function () {
           };
           if (typeof title == 'string') {
             sendObj.title = title;
-            sendObj.serviceRequestObject = JSON.stringify(obj);
+            sendObj.serviceRequestObject = obj;
           } else {
-            sendObj.serviceRequestObject = JSON.stringify(title);
+            sendObj.serviceRequestObject = title;
             if (typeof serviceOrderUid != 'string') {
               sendObj.title = 'untitled';
             }
@@ -1238,7 +1238,7 @@ var mp = (function () {
               url = '/serviceorder/' + serviceOrderUid;
               obj = {};
             } else {
-              url = '/serviceorders';
+              url = '/serviceorder';
               obj = {
                 companyUid: companyUid || innerthis.credentials.companyUid
               };
