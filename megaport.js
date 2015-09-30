@@ -537,16 +537,15 @@ var mp = (function () {
       return new Promise(function (resolve, reject) {
         reject = reject || function () {};
         q.onready(function () {
-          xhr.get(baseurl + '/servicegroups', {}, innerthis.credentials.token)
+          xhr.get(baseurl + '/products', {}, innerthis.credentials.token)
             .then(
               function (d) {
-                resolve(srvcObj(d.data));
+                resolve(d.data);
               },
               function (d) {
                 reject(d);
                 if (typeof errors == 'function')
                   errors(d);
-
               }
             );
         });
