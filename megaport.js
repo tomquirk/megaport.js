@@ -458,27 +458,108 @@ var mp = (function () {
     };
 
 
-    this.ixp = function (peerid, rsid, productid) {
-      var url = (peerid ? '/ixp/' + peerid + '/peers' : '/ixp');
-      if (peerid && rsid && productid)
-        url = '/ixp/' + peerid + '/' + rsid + '/product/' + productid + '/prefixes';
-      return new Promise(function (resolve, reject) {
-        reject = reject || function () {};
-        q.onready(function () {
-          xhr.get(baseurl + url, {}, innerthis.credentials.token)
-            .then(
-              function (d) {
-                resolve(d.data || d);
-              },
-              function (d) {
-                reject(d);
-                if (typeof errors == 'function')
-                  errors(d);
+    this.ixp = function (ixpid) {
+      return {
+        then: function (resolve, reject) {
+          reject = reject || function () {};
+          q.onready(function () {
+            xhr.get(baseurl + '/ixp', {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data || d);
+                },
+                function (d) {
+                  reject(d);
+                  if (typeof errors == 'function')
+                    errors(d);
+                }
+              );
+          });
+        },
+        peers: function () {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/ixp/' + ixpid + '/peers', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        },
+        peer: function (rsid, productid) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/ixp/' + ixpid + '/' + rsid + '/product/' + productid, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        },
+        prefixes: function (rsid, productid) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/ixp/' + ixpid + '/' + rsid + '/product/' + productid + '/prefixes', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        },
+        graphs: function (productid, to, from) {
 
-              }
-            );
-        });
-      });
+          var pObj = {
+            productId: productid,
+          };
+
+          if (!to)
+            pObj.to = new Date().getTime();
+          if (!from)
+            pObj.from = pObj.to - 86400000;
+
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/graph/', pObj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        }
+      };
+
     };
 
     this.ixpGraph = function (productid, to, from) {

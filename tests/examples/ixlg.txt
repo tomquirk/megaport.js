@@ -1,0 +1,15 @@
+megaport.ixp().then(function(d){
+  output(d);
+});
+
+megaport.ixp(1).peers().then(function(d){
+  output(d);
+});
+
+megaport.ixp(1).peer('rs1', 917).then(function(d){
+  output(d);
+});
+
+megaport.ixp(1).prefixes('rs1', 917).then(function(d){
+  output(d);
+});
