@@ -717,7 +717,7 @@ var mp = (function () {
             q.onready(function () {
               innerThis.then(function () {
                 xhr.get(baseurl + '/graph/', {
-                    productUid: productId
+                    productUid: productId.toString()
                   }, innerthis.credentials.token)
                   .then(
                     function (d) {
