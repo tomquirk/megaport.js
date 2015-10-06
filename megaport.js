@@ -860,6 +860,24 @@ var mp = (function () {
 
     this.company = function (companyUid) {
       return {
+        upgrade: function (obj) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.jpost(baseurl + '/social/company', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        },
         update: function (obj) {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
