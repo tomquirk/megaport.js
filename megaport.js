@@ -530,12 +530,10 @@ var mp = (function () {
             });
           });
         },
-        graphs: function (productid, to, from) {
-
+        graph: function (productid, to, from) {
           var pObj = {
-            productId: productid,
+            productIdOrUid: productid
           };
-
           if (!to)
             pObj.to = new Date().getTime();
           if (!from)
@@ -559,39 +557,8 @@ var mp = (function () {
           });
         }
       };
-
     };
 
-    this.ixpGraph = function (productid, to, from) {
-      var url = '/graph';
-      var pObj = {
-        productId: productid,
-      };
-
-
-      if (!to)
-        pObj.to = new Date().getTime();
-      if (!from)
-        pObj.from = pObj.to - 86400000;
-
-      return new Promise(function (resolve, reject) {
-        reject = reject || function () {};
-        q.onready(function () {
-          xhr.get(baseurl + url, pObj, innerthis.credentials.token)
-            .then(
-              function (d) {
-                resolve(d.data || d);
-              },
-              function (d) {
-                reject(d);
-                if (typeof errors == 'function')
-                  errors(d);
-
-              }
-            );
-        });
-      });
-    };
 
 
     this.servicegroups = function () {
