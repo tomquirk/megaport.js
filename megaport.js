@@ -19,6 +19,9 @@ var mp = (function () {
           username: obj.username,
           password: obj.password
         };
+        if (typeof obj.target_username == 'string')
+          authParams.target_username = obj.target_username;
+
       } else if (typeof obj.token == 'string') {
         authUrl = baseurl + '/login/' + obj.token;
         authParams = {};
