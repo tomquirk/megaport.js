@@ -33,3 +33,9 @@ megaport.product(productUid).then(
 //      output(response);
 //    }
 //  );
+
+//  megaport.product().azure('8e20ac59-1151-4fd8-bec1-9730d13bbd55').then(
+//    function (response) {
+//      output(response);
+//    }
+//  );

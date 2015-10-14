@@ -630,6 +630,25 @@ var mp = (function () {
       // /v2/dropdowns/locations
 
       return {
+        azure: function (serviceUuid) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/secure/azure/' + serviceUuid, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        },
         checkPrice: function (rateLimit) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
