@@ -80,6 +80,49 @@ var mp = (function () {
       });
     };
 
+    this.passwordRequest = function (email) {
+      var innerThis = this;
+      return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
+        xhr.post(baseurl + '/password/reset/request', {
+            email: email
+          })
+          .then(
+            function (d) {
+              this.credentials = {};
+              resolve(d.data || d);
+            },
+            function (d) {
+              reject(d);
+              if (typeof errors == 'function')
+                errors(d);
+            }
+          );
+      });
+    };
+
+    this.passwordReset = function (resetToken, password) {
+      var innerThis = this;
+      return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
+        xhr.post(baseurl + '/password/reset/reset', {
+            resetToken: resetToken,
+            password: password
+          })
+          .then(
+            function (d) {
+              this.credentials = {};
+              resolve(d.data || d);
+            },
+            function (d) {
+              reject(d);
+              if (typeof errors == 'function')
+                errors(d);
+            }
+          );
+      });
+    };
+
     // /secure/dropdowns/locations
     this.ready = function (cb) {
       onready.push(cb);
