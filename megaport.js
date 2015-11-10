@@ -105,7 +105,7 @@ var mp = (function () {
       var innerThis = this;
       return new Promise(function (resolve, reject) {
         reject = reject || function () {};
-        xhr.post(baseurl + '/password/reset/reset', {
+        xhr.post(baseurl + '/password/reset', {
             resetToken: resetToken,
             password: password
           })
