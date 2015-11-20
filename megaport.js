@@ -1260,10 +1260,28 @@ var mp = (function () {
       });
     };
 
+    this.approveVxc = function (orderUid, sendObj) {
+      return new Promise(function (resolve, reject) {
+        reject = reject || function () {};
+        q.onready(function () {
+
+          xhr.put(baseurl + '/order/vxc/' + orderUid, sendObj, innerthis.credentials.token)
+            .then(
+              function (d) {
+                resolve(d.data || d);
+              },
+              function (d) {
+                reject(d);
+              }
+            );
+
+        });
+      });
+    };
+
     this.serviceOrder = function (serviceOrderUid, companyUid) {
       return {
         save: function (title, obj) {
-
           var sendObj = {
             companyUid: companyUid || innerthis.credentials.companyUid
           };
