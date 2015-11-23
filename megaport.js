@@ -362,7 +362,7 @@ var mp = (function () {
             billingMonth: obj.month,
             billingYear: obj.year
           });
-          return baseurl + '/agency/' + agencyId + '/commissionReport/csv?token=' + innerthis.credentials.token + '&' + querystr
+          return baseurl + '/agency/' + agencyId + '/commissionReport/csv?token=' + innerthis.credentials.token + '&' + querystr;
         },
         commissionReport: function (obj) {
           obj = obj || {};
@@ -962,7 +962,7 @@ var mp = (function () {
         then: function (resolve, reject) {
           reject = reject || function () {};
           q.onready(function () {
-            companyUid = companyUid || innerthis.credentials.companyUid
+            companyUid = companyUid || innerthis.credentials.companyUid;
             xhr.get(baseurl + '/company/' + companyUid, {}, innerthis.credentials.token)
               .then(
                 function (d) {
@@ -1264,7 +1264,6 @@ var mp = (function () {
       return new Promise(function (resolve, reject) {
         reject = reject || function () {};
         q.onready(function () {
-
           xhr.put(baseurl + '/order/vxc/' + orderUid, sendObj, innerthis.credentials.token)
             .then(
               function (d) {
@@ -1274,7 +1273,6 @@ var mp = (function () {
                 reject(d);
               }
             );
-
         });
       });
     };
