@@ -765,6 +765,27 @@ var mp = (function () {
             });
           });
         },
+        logs: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              innerThis.then(function () {
+                xhr.get(baseurl + '/product/' + productId + '/logs', {}, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
         update: function (obj) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
@@ -1288,7 +1309,7 @@ var mp = (function () {
             sendObj.serviceRequestObject = obj;
           } else {
             sendObj.serviceRequestObject = title;
-            if (typeof serviceOrderUid != 'string') {
+            if (!serviceOrderUid) {
               sendObj.title = 'untitled';
             }
           }
