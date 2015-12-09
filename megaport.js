@@ -58,6 +58,18 @@ var mp = (function () {
       );
     };
 
+    this.reauth = function () {
+      authUrl = baseurl + '/login';
+      authParams = {
+        access_token: innerthis.credentials.access_token,
+      };
+      xhr.post(authUrl, authParams).then(
+        function (d) {
+          innerthis.credentials = d.data;
+        }
+      );
+    };
+
     this.logout = function () {
       var innerThis = this;
       return new Promise(function (resolve, reject) {
@@ -783,6 +795,53 @@ var mp = (function () {
                     }
                   );
               });
+            });
+          });
+        },
+        getKey: function (key) {
+          return new Promise(function (resolve, reject) {
+            var obj = {};
+
+            if (key)
+              obj.key = key;
+
+            if (productId)
+              obj.productUid = productId;
+
+            reject = reject || function () {};
+            q.onready(function () {
+              innerThis.then(function () {
+                xhr.get(baseurl + '/service/key', obj, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
+        createKey: function (obj) {
+          obj.productUid = productId;
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.jpost(baseurl + '/service/key', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
             });
           });
         },
