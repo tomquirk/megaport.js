@@ -799,6 +799,7 @@ var mp = (function () {
           });
         },
         getKey: function (key) {
+          var innerThis = this;
           return new Promise(function (resolve, reject) {
             var obj = {};
 
