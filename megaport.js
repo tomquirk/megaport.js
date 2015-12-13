@@ -807,7 +807,7 @@ var mp = (function () {
               obj.key = key;
 
             if (productId)
-              obj.productUid = productId;
+              obj.productIdOrUid = productId;
 
             reject = reject || function () {};
             q.onready(function () {
