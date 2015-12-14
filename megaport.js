@@ -811,19 +811,17 @@ var mp = (function () {
 
             reject = reject || function () {};
             q.onready(function () {
-              innerThis.then(function () {
-                xhr.get(baseurl + '/service/key', obj, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
+              xhr.get(baseurl + '/service/key', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
             });
           });
         },
