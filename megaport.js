@@ -1058,6 +1058,29 @@ var mp = (function () {
       };
     };
 
+    this.simplePay = function () {
+      return {
+        getCheckout: function () {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/v2/simplepay/checkout', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        }
+      };
+    };
+
     this.employment = function (employmentId) {
       return {
         employ: function (obj) {
