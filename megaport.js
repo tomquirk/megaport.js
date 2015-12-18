@@ -1064,7 +1064,7 @@ var mp = (function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
-              xhr.get(baseurl + '/v2/simplepay/checkout', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/simplepay/checkout', {}, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
