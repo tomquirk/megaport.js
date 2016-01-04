@@ -53,7 +53,7 @@ var mp = (function () {
           console.log(d);
           if (d.status == 401)
             if (typeof failauth == 'function')
-              failauth();
+              failauth(d);
         }
       );
     };
@@ -1684,7 +1684,7 @@ var mp = (function () {
           }
           if (rq.status == 401) {
             if (typeof failauth == 'function')
-              failauth();
+              failauth(rq);
           }
         };
         rq.onerror = function () {};
