@@ -1,10 +1,10 @@
 /* jshint -W083, -W117  */
 var mp = (function () {
   var cache = {};
+  var onready = [],
+    failauth, authUrl, authParams, errors;
   var exports = function (baseurl) {
     var innerthis = this;
-    var onready = [],
-      failauth, authUrl, authParams, errors;
     this.baseurl = baseurl;
     this.credentials = {};
 
@@ -1681,6 +1681,10 @@ var mp = (function () {
           }
           if (rq.status == 400) {
 
+          }
+          if (rq.status == 401) {
+            if (typeof failauth == 'function')
+              failauth();
           }
         };
         rq.onerror = function () {};
