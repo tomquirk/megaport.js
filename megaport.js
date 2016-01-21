@@ -844,6 +844,46 @@ var mp = (function () {
             });
           });
         },
+        cancel: function () {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              innerThis.then(function (productObj) {
+                xhr.post(baseurl + '/product/' + productId + '/action/CANCEL', {}, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
+        cancelCharges: function () {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              innerThis.then(function (productObj) {
+                xhr.get(baseurl + '/product/' + productId + '/action/CANCEL/charges', {}, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
         update: function (obj) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
