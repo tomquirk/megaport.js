@@ -850,7 +850,7 @@ var mp = (function () {
             reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function (productObj) {
-                xhr.post(baseurl + '/product' + productId + '/action/CANCEL', {}, innerthis.credentials.token)
+                xhr.post(baseurl + '/product/' + productId + '/action/CANCEL', {}, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
@@ -871,7 +871,7 @@ var mp = (function () {
             reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function (productObj) {
-                xhr.get(baseurl + '/product' + productId + '/action/CANCEL/charges', {}, innerthis.credentials.token)
+                xhr.get(baseurl + '/product/' + productId + '/action/CANCEL/charges', {}, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
