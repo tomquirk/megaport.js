@@ -2,7 +2,7 @@
 var mp = (function () {
   var cache = {};
   var onready = [],
-    failauth, authUrl, authParams, errors;
+    failauth, authUrl, authParams, errors, maintenance;
   var exports = function (baseurl) {
     var innerthis = this;
     this.baseurl = baseurl;
@@ -51,6 +51,8 @@ var mp = (function () {
         function (d) {
           console.warn('Login Failed, constructor useless ' + d.status);
           console.log(d);
+          if (d.status == 503)
+            return maintenance();
           if (d.status == 401)
             if (typeof failauth == 'function')
               failauth(d);
@@ -142,6 +144,10 @@ var mp = (function () {
         cb(innerthis.credentials);
       return innerthis;
     };
+
+    this.maintenance = function (cb) {
+      maintenance = cb;
+    }
 
     this.failauth = function (cb) {
       failauth = cb;
@@ -1712,6 +1718,10 @@ var mp = (function () {
         rq.open(method.replace('J', ''), url, true);
 
         rq.onload = function () {
+
+          if (rq.status == 503)
+            return maintenance();
+
           if (rq.status < 210) {
             resolve(JSON.parse(rq.responseText));
           }
