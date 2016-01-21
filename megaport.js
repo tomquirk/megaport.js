@@ -845,6 +845,7 @@ var mp = (function () {
           });
         },
         cancel: function () {
+          var innerThis = this;
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
@@ -865,6 +866,7 @@ var mp = (function () {
           });
         },
         cancelCharges: function () {
+          var innerThis = this;
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
