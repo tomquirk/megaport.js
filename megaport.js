@@ -1102,11 +1102,13 @@ var mp = (function () {
 
     this.simplePay = function () {
       return {
-        getCheckout: function () {
+        getCheckout: function (supplierId) {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
-              xhr.get(baseurl + '/simplepay/checkout', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/simplepay/checkout', {
+                  supplierId: supplierId
+                }, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
