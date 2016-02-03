@@ -63,7 +63,7 @@ var mp = (function () {
     this.reauth = function () {
       authUrl = baseurl + '/login';
       authParams = {
-        access_token: innerthis.credentials.access_token,
+        access_token: innerthis.credentials.token,
       };
       xhr.post(authUrl, authParams).then(
         function (d) {
