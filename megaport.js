@@ -1243,7 +1243,7 @@ var mp = (function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
-              xhr.post(baseurl + '/password/change/' + innerthis.credentials.personId, obj, innerthis.credentials.token)
+              xhr.post(baseurl + '/password/change', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
