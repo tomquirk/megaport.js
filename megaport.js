@@ -61,7 +61,7 @@ var mp = (function () {
     };
 
     this.reauth = function () {
-      authUrl = baseurl + '/login/' + innerthis.credentials.token
+      authUrl = baseurl + '/login/' + innerthis.credentials.token;
       xhr.post(authUrl, {}).then(
         function (d) {
           innerthis.credentials = d.data;
@@ -144,7 +144,7 @@ var mp = (function () {
 
     this.maintenance = function (cb) {
       maintenance = cb;
-    }
+    };
 
     this.failauth = function (cb) {
       failauth = cb;
@@ -1753,7 +1753,7 @@ var mp = (function () {
         rq.open(method.replace('J', ''), url, true);
 
         rq.onload = function () {
-
+          rq.status = parseInt(rq.status) || 400;
           if (rq.status == 503)
             return maintenance();
 
