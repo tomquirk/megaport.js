@@ -1334,6 +1334,10 @@ var mp = (function () {
       return hash;
     }
 
+    function clone(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
     var priceBookCache = {};
     this.priceBook = function () {
 
@@ -1341,14 +1345,14 @@ var mp = (function () {
         megaport: function (obj) {
           return new Promise(function (resolve, reject) {
             if (priceBookCache[hash(obj)])
-              return resolve(priceBookCache[hash(obj)]);
+              return resolve(clone(priceBookCache[hash(obj)]));
             reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/pricebook/megaport', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     priceBookCache[hash(obj)] = d.data || d;
-                    resolve(d.data || d);
+                    resolve(clone(d.data) || d);
                   },
                   function (d) {
                     reject(d);
@@ -1363,14 +1367,14 @@ var mp = (function () {
 
           return new Promise(function (resolve, reject) {
             if (priceBookCache[hash(obj)])
-              return resolve(priceBookCache[hash(obj)]);
+              return resolve(clone(priceBookCache[hash(obj)]));
             reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/pricebook/vxc', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     priceBookCache[hash(obj)] = d.data || d;
-                    resolve(d.data || d);
+                    resolve(clone(d.data) || d);
                   },
                   function (d) {
                     reject(d);
@@ -1384,14 +1388,14 @@ var mp = (function () {
         ix: function (obj) {
           return new Promise(function (resolve, reject) {
             if (priceBookCache[hash(obj)])
-              return resolve(priceBookCache[hash(obj)]);
+              return resolve(clone(priceBookCache[hash(obj)]));
             reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/pricebook/ix', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     priceBookCache[hash(obj)] = d.data || d;
-                    resolve(d.data || d);
+                    resolve(clone(d.data) || d);
                   },
                   function (d) {
                     reject(d);
