@@ -1315,15 +1315,39 @@ var mp = (function () {
       };
     };
 
+    function hash(str) {
+      if (typeof str != 'string')
+        str = JSON.stringify(str);
+      if (Array.prototype.reduce) {
+        return str.split("").reduce(function (a, b) {
+          a = ((a << 5) - a) + b.charCodeAt(0);
+          return a & a
+        }, 0);
+      }
+      var hash = 0;
+      if (str.length === 0) return hash;
+      for (var i = 0; i < str.length; i++) {
+        var character = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + character;
+        hash = hash & hash; // Convert to 32bit integer
+      }
+      return hash;
+    }
+
+    var priceBookCache = {};
     this.priceBook = function () {
+
       return {
         megaport: function (obj) {
           return new Promise(function (resolve, reject) {
+            if (priceBookCache[hash(obj)])
+              return resolve(priceBookCache[hash(obj)]);
             reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/pricebook/megaport', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
+                    priceBookCache[hash(obj)] = d.data || d;
                     resolve(d.data || d);
                   },
                   function (d) {
@@ -1336,12 +1360,16 @@ var mp = (function () {
           });
         },
         vxc: function (obj) {
+
           return new Promise(function (resolve, reject) {
+            if (priceBookCache[hash(obj)])
+              return resolve(priceBookCache[hash(obj)]);
             reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/pricebook/vxc', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
+                    priceBookCache[hash(obj)] = d.data || d;
                     resolve(d.data || d);
                   },
                   function (d) {
@@ -1355,11 +1383,14 @@ var mp = (function () {
         },
         ix: function (obj) {
           return new Promise(function (resolve, reject) {
+            if (priceBookCache[hash(obj)])
+              return resolve(priceBookCache[hash(obj)]);
             reject = reject || function () {};
             q.onready(function () {
               xhr.get(baseurl + '/pricebook/ix', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
+                    priceBookCache[hash(obj)] = d.data || d;
                     resolve(d.data || d);
                   },
                   function (d) {
@@ -1745,7 +1776,7 @@ var mp = (function () {
             })(params);
             url += '&' + querystr;
           }
-          console.log(url);
+          //          console.log(url);
         }
 
         var rq = new XMLHttpRequest();
