@@ -1321,17 +1321,17 @@ var mp = (function () {
       if (Array.prototype.reduce) {
         return str.split("").reduce(function (a, b) {
           a = ((a << 5) - a) + b.charCodeAt(0);
-          return a & a
+          return a & a;
         }, 0);
       }
-      var hash = 0;
-      if (str.length === 0) return hash;
+      var hsh = 0;
+      if (str.length === 0) return hsh;
       for (var i = 0; i < str.length; i++) {
         var character = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + character;
-        hash = hash & hash; // Convert to 32bit integer
+        hsh = ((hsh << 5) - hsh) + character;
+        hsh = hsh & hsh; // Convert to 32bit integer
       }
-      return hash;
+      return hsh;
     }
 
     function clone(obj) {
