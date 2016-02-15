@@ -848,6 +848,25 @@ var mp = (function () {
             });
           });
         },
+        updateKey: function (obj) {
+          obj.productUid = productId;
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.put(baseurl + '/service/key', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        },
         cancel: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
