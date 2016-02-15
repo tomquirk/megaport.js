@@ -817,6 +817,7 @@ var mp = (function () {
               xhr.get(baseurl + '/service/key', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
+                    d.data = d.data || [];
                     resolve(d.data || d);
                   },
                   function (d) {
