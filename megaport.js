@@ -1068,6 +1068,7 @@ var mp = (function () {
 
 
     this.company = function (companyUid) {
+      companyUid = companyUid || innerthis.credentials.companyUid;
       return {
         upgrade: function (obj) {
           return new Promise(function (resolve, reject) {
@@ -1106,7 +1107,6 @@ var mp = (function () {
         then: function (resolve, reject) {
           reject = reject || function () {};
           q.onready(function () {
-            companyUid = companyUid || innerthis.credentials.companyUid;
             xhr.get(baseurl + '/company/' + companyUid, {}, innerthis.credentials.token)
               .then(
                 function (d) {
@@ -1119,7 +1119,44 @@ var mp = (function () {
                 }
               );
           });
+        },
+        metadata: function () {
+          return {
+            then: function (resolve, reject) {
+              reject = reject || function () {};
+              q.onready(function () {
+                xhr.get(baseurl + '/company/' + companyUid + '/metadata', {}, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            },
+            update: function (obj) {
+              return new Promise(function (resolve, reject) {
+                reject = reject || function () {};
+                q.onready(function () {
+                  xhr.put(baseurl + '/company/' + companyUid + '/metadata', obj, innerthis.credentials.token)
+                    .then(
+                      function (d) {
+                        resolve(d);
+                      },
+                      function (d) {
+                        reject(d);
+                      }
+                    );
+                });
+              });
+            }
+          };
         }
+
       };
     };
 
