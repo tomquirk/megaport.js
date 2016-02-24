@@ -1314,6 +1314,22 @@ var mp = (function () {
             });
           });
         },
+        activity: function (resolve, reject) {
+          reject = reject || function () {};
+          q.onready(function () {
+            xhr.get(baseurl + '/activity', {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data || d);
+                },
+                function (d) {
+                  reject(d);
+                  if (typeof errors == 'function')
+                    errors(d);
+                }
+              );
+          });
+        },
         then: function (resolve, reject) {
           reject = reject || function () {};
           q.onready(function () {
