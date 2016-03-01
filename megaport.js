@@ -254,7 +254,7 @@ var mp = (function () {
           });
         })
       };
-    }
+    };
 
     this.menuStats = function () {
       return new Promise(function (resolve, reject) {
