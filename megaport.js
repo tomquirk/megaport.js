@@ -180,6 +180,82 @@ var mp = (function () {
       });
     };
 
+    this.prompt = function (promptId) {
+      return {
+        update: function (status, rating, description) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.put(baseurl + '/prompt/' + promptId, {
+                  promptStatus: status,
+                  rating: rating,
+                  description: description
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        },
+        create: function (obj) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.post(baseurl + '/prompt', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
+        },
+        then: (promptId ? function (resolve, reject) {
+          reject = reject || function () {};
+          q.onready(function () {
+            xhr.get(baseurl + '/prompt/' + promptId, {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data || d);
+                },
+                function (d) {
+                  reject(d);
+                  if (typeof errors == 'function')
+                    errors(d);
+                }
+              );
+          });
+        } : function (resolve, reject) {
+          reject = reject || function () {};
+          q.onready(function () {
+            xhr.get(baseurl + '/prompt', {}, innerthis.credentials.token)
+              .then(
+                function (d) {
+                  resolve(d.data || d);
+                },
+                function (d) {
+                  reject(d);
+                  if (typeof errors == 'function')
+                    errors(d);
+                }
+              );
+          });
+        })
+      };
+    }
+
     this.menuStats = function () {
       return new Promise(function (resolve, reject) {
         reject = reject || function () {};
