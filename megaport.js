@@ -185,11 +185,7 @@ var mp = (function () {
         update: function (status, rating, description) {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
-            xhr.put(baseurl + '/prompt/' + promptId, {
-                promptStatus: status,
-                rating: rating,
-                description: description
-              }, innerthis.credentials.token)
+            xhr.put(baseurl + '/prompt/' + promptId + '?promptStatus=' + status + '&rating=' + rating + '&description' + encodeURI(description), {}, innerthis.credentials.token)
               .then(
                 function (d) {
                   resolve(d);
