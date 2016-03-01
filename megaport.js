@@ -208,7 +208,7 @@ var mp = (function () {
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
-              xhr.post(baseurl + '/prompt', obj, innerthis.credentials.token)
+              xhr.jpost(baseurl + '/prompt', obj, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
