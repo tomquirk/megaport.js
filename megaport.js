@@ -1921,6 +1921,7 @@ var mp = (function () {
             })(params);
             url += '&' + querystr;
           }
+          url = url.replace(/&$/, '');
           //          console.log(url);
         }
 
