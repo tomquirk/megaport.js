@@ -933,13 +933,13 @@ var mp = (function () {
             });
           });
         },
-        cancel: function () {
+        cancel: function (now) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function (productObj) {
-                xhr.post(baseurl + '/product/' + productId + '/action/CANCEL', {}, innerthis.credentials.token)
+                xhr.post(baseurl + '/product/' + productId + '/action/' + (now ? 'TERMINATE' : 'CANCEL'), {}, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
