@@ -1481,8 +1481,10 @@ var mp = (function () {
 
     var priceBookCache = {};
     this.priceBook = function () {
-
       return {
+        resetCache: function () {
+          priceBookCache = {};
+        },
         megaport: function (obj) {
           return new Promise(function (resolve, reject) {
             if (priceBookCache[hash(obj)])
