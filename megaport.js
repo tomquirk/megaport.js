@@ -682,6 +682,32 @@ var mp = (function () {
                 );
             });
           });
+        },
+        graphMbps: function (productid, to, from) {
+          var pObj = {
+            productIdOrUid: productid
+          };
+          if (!to)
+            pObj.to = new Date().getTime();
+          if (!from)
+            pObj.from = pObj.to - 86400000;
+
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/graph/mbps', pObj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
         }
       };
     };
@@ -1900,6 +1926,7 @@ var mp = (function () {
     fn(resolve, reject);
   }
 
+  var pendingXhr = [];
   var xhreq = function () {
     var innerthis = this;
 
@@ -1928,10 +1955,12 @@ var mp = (function () {
         }
 
         var rq = new XMLHttpRequest();
+        pendingXhr.push('a');
 
         rq.open(method.replace('J', ''), url, true);
 
         rq.onload = function () {
+          pendingXhr.shift();
           rq.status = parseInt(rq.status) || 400;
           if (rq.status == 503)
             return maintenance();
@@ -1953,7 +1982,9 @@ var mp = (function () {
               failauth(rq);
           }
         };
-        rq.onerror = function () {};
+        rq.onerror = function () {
+          pendingXhr.shift();
+        };
 
         switch (method) {
 
