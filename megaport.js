@@ -872,6 +872,29 @@ var mp = (function () {
             });
           });
         },
+        graphMbps: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              innerThis.then(function () {
+                xhr.get(baseurl + '/graph/mbps/', {
+                    productIdOrUid: productId
+                  }, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
         logs: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
