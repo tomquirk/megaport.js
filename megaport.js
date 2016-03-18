@@ -34,7 +34,7 @@ var mp = (function () {
       }
       //console.log(authParams,authUrl);
       if (!authUrl || !authParams) return false;
-      xhr.post(authUrl, authParams).then(
+      xhr.post(authUrl, authParams, null, true).then(
         function (d) {
           innerthis.credentials = d.data;
 
@@ -1901,7 +1901,8 @@ var mp = (function () {
   var xhreq = function () {
     var innerthis = this;
 
-    this.ajax = function (method, url, params, token) {
+    this.ajax = function (method, url, params, token, syncro) {
+      syncro = syncro || true;
       return new Promise(function (resolve, reject) {
         reject = reject || function () {};
         method = method.toUpperCase();
@@ -1927,7 +1928,7 @@ var mp = (function () {
 
         var rq = new XMLHttpRequest();
 
-        rq.open(method.replace('J', ''), url, true);
+        rq.open(method.replace('J', ''), url, syncro);
 
         rq.onload = function () {
           rq.status = parseInt(rq.status) || 400;
@@ -2005,20 +2006,20 @@ var mp = (function () {
       });
     };
 
-    this.get = function (url, params, token) {
-      return innerthis.ajax('GET', url, params, token);
+    this.get = function (url, params, token, syncro) {
+      return innerthis.ajax('GET', url, params, token, syncro);
     };
-    this.post = function (url, params, token) {
-      return innerthis.ajax('POST', url, params, token);
+    this.post = function (url, params, token, syncro) {
+      return innerthis.ajax('POST', url, params, token, syncro);
     };
-    this.jpost = function (url, params, token) {
-      return innerthis.ajax('JPOST', url, params, token);
+    this.jpost = function (url, params, token, syncro) {
+      return innerthis.ajax('JPOST', url, params, token, syncro);
     };
-    this.put = function (url, params, token) {
-      return innerthis.ajax('PUT', url, params, token);
+    this.put = function (url, params, token, syncro) {
+      return innerthis.ajax('PUT', url, params, token, syncro);
     };
-    this.delete = function (url, params, token) {
-      return innerthis.ajax('DELETE', url, params, token);
+    this.delete = function (url, params, token, syncro) {
+      return innerthis.ajax('DELETE', url, params, token, syncro);
     };
   };
 
