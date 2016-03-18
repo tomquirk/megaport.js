@@ -682,6 +682,32 @@ var mp = (function () {
                 );
             });
           });
+        },
+        graphMbps: function (productid, to, from) {
+          var pObj = {
+            productIdOrUid: productid
+          };
+          if (!to)
+            pObj.to = new Date().getTime();
+          if (!from)
+            pObj.from = pObj.to - 86400000;
+
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              xhr.get(baseurl + '/graph/mbps', pObj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    reject(d);
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                );
+            });
+          });
         }
       };
     };
@@ -846,6 +872,29 @@ var mp = (function () {
             });
           });
         },
+        graphMbps: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              innerThis.then(function () {
+                xhr.get(baseurl + '/graph/mbps/', {
+                    productIdOrUid: productId
+                  }, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
         logs: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
@@ -933,13 +982,13 @@ var mp = (function () {
             });
           });
         },
-        cancel: function () {
+        cancel: function (now) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function (productObj) {
-                xhr.post(baseurl + '/product/' + productId + '/action/CANCEL', {}, innerthis.credentials.token)
+                xhr.post(baseurl + '/product/' + productId + '/action/' + (now ? 'TERMINATE' : 'CANCEL'), {}, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
@@ -1481,8 +1530,10 @@ var mp = (function () {
 
     var priceBookCache = {};
     this.priceBook = function () {
-
       return {
+        resetCache: function () {
+          priceBookCache = {};
+        },
         megaport: function (obj) {
           return new Promise(function (resolve, reject) {
             if (priceBookCache[hash(obj)])
@@ -1898,6 +1949,7 @@ var mp = (function () {
     fn(resolve, reject);
   }
 
+  var pendingXhr = [];
   var xhreq = function () {
     var innerthis = this;
 
@@ -1927,10 +1979,12 @@ var mp = (function () {
         }
 
         var rq = new XMLHttpRequest();
+        pendingXhr.push('a');
 
         rq.open(method.replace('J', ''), url, syncro);
 
         rq.onload = function () {
+          pendingXhr.shift();
           rq.status = parseInt(rq.status) || 400;
           if (rq.status == 503)
             return maintenance();
@@ -1952,7 +2006,9 @@ var mp = (function () {
               failauth(rq);
           }
         };
-        rq.onerror = function () {};
+        rq.onerror = function () {
+          pendingXhr.shift();
+        };
 
         switch (method) {
 
