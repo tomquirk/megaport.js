@@ -683,7 +683,7 @@ var mp = (function () {
             });
           });
         },
-        graphMbps: function (productid, to, from) {
+        graphMbps: function (productid, from, to) {
           var pObj = {
             productIdOrUid: productid
           };
@@ -872,15 +872,22 @@ var mp = (function () {
             });
           });
         },
-        graphMbps: function () {
+        graphMbps: function (from, to) {
+
+          var pObj = {
+            productIdOrUid: productId
+          };
+          if (!to)
+            pObj.to = new Date().getTime();
+          if (!from)
+            pObj.from = pObj.to - 86400000;
+
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function () {
-                xhr.get(baseurl + '/graph/mbps/', {
-                    productIdOrUid: productId
-                  }, innerthis.credentials.token)
+                xhr.get(baseurl + '/graph/mbps/', pObj, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
