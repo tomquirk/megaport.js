@@ -982,13 +982,19 @@ var mp = (function () {
             });
           });
         },
-        cancel: function (now) {
+        cancel: function (now, rating, description) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
               innerThis.then(function (productObj) {
-                xhr.post(baseurl + '/product/' + productId + '/action/' + (now ? 'TERMINATE' : 'CANCEL'), {}, innerthis.credentials.token)
+                var obj = {};
+                if (rating || description)
+                  obj = {
+                    rating: rating || 3,
+                    description: description || ''
+                  };
+                xhr.post(baseurl + '/product/' + productId + '/action/' + (now ? 'TERMINATE' : 'CANCEL'), obj, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
