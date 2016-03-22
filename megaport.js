@@ -687,10 +687,8 @@ var mp = (function () {
           var pObj = {
             productIdOrUid: productid
           };
-          if (!to)
-            pObj.to = new Date().getTime();
-          if (!from)
-            pObj.from = pObj.to - 86400000;
+          pObj.to = to || new Date().getTime();
+          pObj.from = from || pObj.to - 86400000;
 
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
@@ -877,10 +875,8 @@ var mp = (function () {
           var pObj = {
             productIdOrUid: productId
           };
-          if (!to)
-            pObj.to = new Date().getTime();
-          if (!from)
-            pObj.from = pObj.to - 86400000;
+          pObj.to = to || new Date().getTime();
+          pObj.from = from || pObj.to - 86400000;
 
           var innerThis = this;
           return new Promise(function (resolve, reject) {
