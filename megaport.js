@@ -997,7 +997,7 @@ var mp = (function () {
                     rating: rating || 3,
                     description: description || ''
                   };
-                xhr.post(baseurl + '/product/' + productId + '/action/' + (now ? 'TERMINATE' : 'CANCEL'), obj, innerthis.credentials.token)
+                xhr.jpost(baseurl + '/product/' + productId + '/action/' + (now ? 'TERMINATE' : 'CANCEL'), obj, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
