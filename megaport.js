@@ -1012,6 +1012,27 @@ var mp = (function () {
             });
           });
         },
+        uncancel: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              innerThis.then(function (productObj) {
+                xhr.jpost(baseurl + '/product/' + productId + '/action/UN_CANCEL', {}, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
         cancelCharges: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
