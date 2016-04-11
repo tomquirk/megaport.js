@@ -1990,7 +1990,7 @@ var mp = (function () {
         method = method.toUpperCase();
 
         if (typeof token == 'string')
-          url += '?token=' + token;
+          url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + token;
 
         if (method == 'GET') {
           if (typeof params == 'object') {
