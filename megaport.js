@@ -34,7 +34,7 @@ var mp = (function () {
       }
       //console.log(authParams,authUrl);
       if (!authUrl || !authParams) return false;
-      xhr.post(authUrl, authParams).then(
+      xhr.post(authUrl, authParams, null, true).then(
         function (d) {
           innerthis.credentials = d.data;
 
@@ -710,14 +710,12 @@ var mp = (function () {
             });
           });
         },
-        graphMbps: function (productid, to, from) {
+        graphMbps: function (productid, from, to) {
           var pObj = {
             productIdOrUid: productid
           };
-          if (!to)
-            pObj.to = new Date().getTime();
-          if (!from)
-            pObj.from = pObj.to - 86400000;
+          pObj.to = to || new Date().getTime();
+          pObj.from = from || pObj.to - 86400000;
 
           return new Promise(function (resolve, reject) {
             q.onready(function () {
@@ -897,14 +895,19 @@ var mp = (function () {
             });
           });
         },
-        graphMbps: function () {
+        graphMbps: function (from, to) {
+
+          var pObj = {
+            productIdOrUid: productId
+          };
+          pObj.to = to || new Date().getTime();
+          pObj.from = from || pObj.to - 86400000;
+
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
               innerThis.then(function () {
-                xhr.get(baseurl + '/graph/mbps/', {
-                    productIdOrUid: productId
-                  }, innerthis.credentials.token)
+                xhr.get(baseurl + '/graph/mbps/', pObj, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
@@ -1011,12 +1014,39 @@ var mp = (function () {
             });
           });
         },
-        cancel: function (now) {
+        cancel: function (now, rating, description) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
+              innerThis.then(function (productObj) {
+                var obj = {};
+                if (rating || description)
+                  obj = {
+                    rating: rating || 3,
+                    description: description || ''
+                  };
+                xhr.jpost(baseurl + '/product/' + productId + '/action/' + (now ? 'TERMINATE' : 'CANCEL'), obj, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
+        uncancel: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
               innerThis.then(function (productObj) {
-                xhr.post(baseurl + '/product/' + productId + '/action/' + (now ? 'TERMINATE' : 'CANCEL'), {}, innerthis.credentials.token)
+                xhr.jpost(baseurl + '/product/' + productId + '/action/UN_CANCEL', {}, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
@@ -1990,12 +2020,13 @@ var mp = (function () {
   var xhreq = function () {
     var innerthis = this;
 
-    this.ajax = function (method, url, params, token) {
+    this.ajax = function (method, url, params, token, syncro) {
+      syncro = syncro || true;
       return new Promise(function (resolve, reject) {
         method = method.toUpperCase();
 
         if (typeof token == 'string')
-          url += '?token=' + token;
+          url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + token;
 
         if (method == 'GET') {
           if (typeof params == 'object') {
@@ -2016,7 +2047,7 @@ var mp = (function () {
         var rq = new XMLHttpRequest();
         pendingXhr.push('a');
 
-        rq.open(method.replace('J', ''), url, true);
+        rq.open(method.replace('J', ''), url, syncro);
 
         rq.onload = function () {
           pendingXhr.shift();
@@ -2097,20 +2128,20 @@ var mp = (function () {
       });
     };
 
-    this.get = function (url, params, token) {
-      return innerthis.ajax('GET', url, params, token);
+    this.get = function (url, params, token, syncro) {
+      return innerthis.ajax('GET', url, params, token, syncro);
     };
-    this.post = function (url, params, token) {
-      return innerthis.ajax('POST', url, params, token);
+    this.post = function (url, params, token, syncro) {
+      return innerthis.ajax('POST', url, params, token, syncro);
     };
-    this.jpost = function (url, params, token) {
-      return innerthis.ajax('JPOST', url, params, token);
+    this.jpost = function (url, params, token, syncro) {
+      return innerthis.ajax('JPOST', url, params, token, syncro);
     };
-    this.put = function (url, params, token) {
-      return innerthis.ajax('PUT', url, params, token);
+    this.put = function (url, params, token, syncro) {
+      return innerthis.ajax('PUT', url, params, token, syncro);
     };
-    this.delete = function (url, params, token) {
-      return innerthis.ajax('DELETE', url, params, token);
+    this.delete = function (url, params, token, syncro) {
+      return innerthis.ajax('DELETE', url, params, token, syncro);
     };
   };
 
