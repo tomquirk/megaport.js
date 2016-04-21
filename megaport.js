@@ -20,6 +20,10 @@ var mp = (function () {
           password: obj.password,
           onetime_password: obj.onetime_password
         };
+
+        if (!authParams.onetime_password)
+          delete authParams.onetime_password;
+
         if (typeof obj.target_username == 'string')
           authParams.target_username = obj.target_username;
 
