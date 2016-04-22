@@ -1458,6 +1458,27 @@ var mp = (function () {
 
     this.profile = function (obj) {
       return {
+        mfaQr: function () {
+          // /v2/mfa/qr?
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/mfa/qr', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
         update: function (obj) {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
