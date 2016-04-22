@@ -74,6 +74,27 @@ var mp = (function () {
       );
     };
 
+    this.inAuth = function (obj) {
+      var innerThis = this;
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
+          xhr.post(baseurl + '/login', obj, true)
+            .then(
+              function (d) {
+                this.credentials = {};
+                resolve(d.data || d);
+              },
+              function (d) {
+                reject(d);
+                if (typeof errors == 'function')
+                  errors(d);
+
+              }
+            );
+        });
+      });
+    };
+
     this.logout = function () {
       var innerThis = this;
       return new Promise(function (resolve, reject) {
