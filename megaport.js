@@ -1087,12 +1087,12 @@ var mp = (function () {
             });
           });
         },
-        cancelCharges: function () {
+        cancelCharges: function (now) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
               innerThis.then(function (productObj) {
-                xhr.get(baseurl + '/product/' + productId + '/action/CANCEL/charges', {}, innerthis.credentials.token)
+                xhr.get(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL') + '/charges', {}, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
