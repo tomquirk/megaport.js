@@ -876,6 +876,25 @@ var mp = (function () {
             });
           });
         },
+        history: function (year, month) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              innerThis.then(function () {
+                xhr.get(baseurl + '/product/vxc/' + productId + '/rating/' + year + '/' + month, {}, innerthis.credentials.token)
+                  .then(
+                    function (d) {
+                      resolve(d.data || d);
+                    },
+                    function (d) {
+                      reject(d);
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  );
+              });
+            });
+          });
+        },
         types: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
