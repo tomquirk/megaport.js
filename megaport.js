@@ -877,6 +877,7 @@ var mp = (function () {
           });
         },
         history: function (year, month) {
+          var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
               innerThis.then(function () {
