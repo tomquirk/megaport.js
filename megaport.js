@@ -827,11 +827,34 @@ var mp = (function () {
 
     this.eway = function () {
       return {
-        getAccessCode: function () {
+        getAccessCodeRegister: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.get(baseurl + '/eway/accesscode/', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/eway/accesscode/cardregistration', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        getAccessCodeOnceOff: function (cents) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/eway/accesscode/onceoffpayment', {
+                  ammountInCents: cents
+                }, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
