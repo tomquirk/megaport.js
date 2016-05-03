@@ -825,6 +825,32 @@ var mp = (function () {
     };
 
 
+    this.eway = function () {
+      return {
+        getAccessCode: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/eway/accesscode/', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        }
+      };
+      //eway / accesscode
+    };
 
     this.product = function (productId) {
       // /v2/dropdowns/locations
