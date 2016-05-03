@@ -827,11 +827,13 @@ var mp = (function () {
 
     this.eway = function () {
       return {
-        getAccessCodeRegister: function () {
+        getAccessCodeRegister: function (redirectUrl) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.get(baseurl + '/eway/accesscode/cardregistration', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/eway/accesscode/cardregistration', {
+                  redirectUrl: redirectUrl
+                }, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
