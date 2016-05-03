@@ -827,6 +827,27 @@ var mp = (function () {
 
     this.eway = function () {
       return {
+        makePayment: function (amountInCents) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/eway/tokenpayment?amountInCents=' + amountInCents, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
         checkAccessCode: function (code) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
