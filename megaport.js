@@ -1063,7 +1063,7 @@ var mp = (function () {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
               innerThis.then(function () {
-                xhr.get(baseurl + '/product/vxc/' + productId + '/rating/' + year + '/' + month, {}, innerthis.credentials.token)
+                xhr.get(baseurl + '/product/' + productId + '/rating/' + year + '/' + month, {}, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
