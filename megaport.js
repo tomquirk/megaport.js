@@ -824,6 +824,74 @@ var mp = (function () {
       });
     };
 
+    this.notifications = function (destination) {
+      return {
+        destinations: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/messageDestinations', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        events: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/messageEvents', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        update: function (obj) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/messageDestination/' + destination, obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        }
+      };
+
+    };
 
     this.eway = function () {
       return {
