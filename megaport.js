@@ -12,7 +12,7 @@ var mp = (function () {
     var xhr = new xhreq();
     var q = new que();
 
-    this.auth = function (obj) {
+    this.auth = function (obj, success, fail) {
       if (typeof obj.username == 'string' && typeof obj.password == 'string') {
         authUrl = baseurl + '/login';
         authParams = {
@@ -41,19 +41,20 @@ var mp = (function () {
       if (!authUrl || !authParams) return false;
       xhr.post(authUrl, authParams, null, true).then(
         function (d) {
+          if (typeof success == 'function')
+            success(d);
           innerthis.credentials = d.data;
-
           if (typeof onready == 'object') {
             for (var oR in onready)
               if (typeof onready[oR] == 'function')
                 onready[oR](innerthis.credentials);
-
             console.log('Login Success');
           }
-
           q.ready();
         },
         function (d) {
+          if (typeof fail == 'function')
+            fail(d);
           console.warn('Login Failed, constructor useless ' + d.status);
           console.log(d);
           if (d.status == 503)
