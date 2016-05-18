@@ -1059,12 +1059,15 @@ var mp = (function () {
             });
           });
         },
-        history: function (year, month) {
+        history: function (year, month, newSpeed) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
               innerThis.then(function () {
-                xhr.get(baseurl + '/product/' + productId + '/rating/' + year + '/' + month, {}, innerthis.credentials.token)
+                var sObj = {};
+                if (newSpeed)
+                  sObj.newSpeed = newSpeed;
+                xhr.get(baseurl + '/product/' + productId + '/rating/' + year + '/' + month, sObj, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
