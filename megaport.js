@@ -2285,9 +2285,15 @@ var mp = (function () {
           if (typeof params == 'object') {
             var querystr = (function (obj) {
               var str = [];
-              for (var p in obj)
-                if (obj.hasOwnProperty(p))
-                  str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+              for (var p in obj) {
+                if (obj.hasOwnProperty(p)) {
+                  if (!obj[p])
+                    str.push(encodeURIComponent(p) + '=');
+                  else
+                    str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+                }
+              }
+
 
               return str.join("&");
             })(params);
