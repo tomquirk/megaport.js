@@ -66,11 +66,13 @@ var mp = (function () {
       );
     };
 
-    this.reauth = function () {
+    this.reauth = function (cb) {
       authUrl = baseurl + '/login/' + innerthis.credentials.token;
       xhr.post(authUrl, {}).then(
         function (d) {
           innerthis.credentials = d.data;
+          if (typeof cb == 'function')
+            cb(d.data);
         }
       );
     };
