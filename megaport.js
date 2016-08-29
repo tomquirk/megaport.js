@@ -2092,8 +2092,8 @@ var mp = (function () {
       return new Promise(function (resolve, reject) {
         method = method.toUpperCase();
 
-        if (typeof token == 'string')
-          url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + token;
+        //        if (typeof token == 'string')
+        //          url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + token;
 
         if (method == 'GET') {
           if (typeof params == 'object') {
@@ -2112,6 +2112,9 @@ var mp = (function () {
         }
 
         var rq = new XMLHttpRequest();
+        if (typeof token == 'string')
+          rq.setRequestHeader('X-Auth-Token', token);
+
         pendingXhr.push('a');
 
         rq.open(method.replace('J', ''), url, syncro);
