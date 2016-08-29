@@ -2306,12 +2306,13 @@ var mp = (function () {
         }
 
         var rq = new XMLHttpRequest();
-        if (typeof token == 'string')
-          rq.setRequestHeader('X-Auth-Token', token);
 
         pendingXhr.push('a');
 
         rq.open(method.replace('J', ''), url, syncro);
+
+        if (typeof token == 'string')
+          rq.setRequestHeader('X-Auth-Token', token);
 
         rq.onload = function () {
           pendingXhr.shift();
