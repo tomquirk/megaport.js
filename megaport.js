@@ -12,7 +12,7 @@ var mp = (function () {
     var xhr = new xhreq();
     var q = new que();
 
-    this.auth = function (obj) {
+    this.auth = function (obj, success, fail) {
       if (typeof obj.username == 'string' && typeof obj.password == 'string') {
         authUrl = baseurl + '/login';
         authParams = {
@@ -42,18 +42,19 @@ var mp = (function () {
       xhr.post(authUrl, authParams, null, true).then(
         function (d) {
           innerthis.credentials = d.data;
-
+          if (typeof success == 'function')
+            success(d);
           if (typeof onready == 'object') {
             for (var oR in onready)
               if (typeof onready[oR] == 'function')
                 onready[oR](innerthis.credentials);
-
             console.log('Login Success');
           }
-
           q.ready();
         },
         function (d) {
+          if (typeof fail == 'function')
+            fail(d);
           console.warn('Login Failed, constructor useless ' + d.status);
           console.log(d);
           if (d.status == 503)
@@ -65,11 +66,13 @@ var mp = (function () {
       );
     };
 
-    this.reauth = function () {
+    this.reauth = function (cb) {
       authUrl = baseurl + '/login/' + innerthis.credentials.token;
       xhr.post(authUrl, {}).then(
         function (d) {
           innerthis.credentials = d.data;
+          if (typeof cb == 'function')
+            cb(d.data);
         }
       );
     };
@@ -824,7 +827,189 @@ var mp = (function () {
       });
     };
 
+    this.notifications = function (destination) {
+      return {
+        destinations: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/messageDestinations', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        events: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/messageEvents', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        update: function (obj) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/messageDestination/' + destination, obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        }
+      };
 
+    };
+
+    this.eway = function () {
+      return {
+        makePayment: function (amountInCents) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/eway/tokenpayment?amountInCents=' + amountInCents, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        checkAccessCode: function (code) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/eway/paymenttoken?accessCode=' + code, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        getAccessCodeRegister: function (redirectUrl) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/eway/accesscode/cardregistration', {
+                  redirectUrl: redirectUrl
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        getAccessCodeOnceOff: function (cents) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/eway/accesscode/onceoffpayment', {
+                  ammountInCents: cents
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        hasAccessCode: function () {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/eway/paymenttokenstatus', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        }
+      };
+      //eway / accesscode
+    };
 
     this.product = function (productId) {
       // /v2/dropdowns/locations
@@ -876,12 +1061,15 @@ var mp = (function () {
             });
           });
         },
-        history: function (year, month) {
+        history: function (year, month, newSpeed) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
               innerThis.then(function () {
-                xhr.get(baseurl + '/product/vxc/' + productId + '/rating/' + year + '/' + month, {}, innerthis.credentials.token)
+                var sObj = {};
+                if (newSpeed)
+                  sObj.newSpeed = newSpeed;
+                xhr.get(baseurl + '/product/' + productId + '/rating/' + year + '/' + month, sObj, innerthis.credentials.token)
                   .then(
                     function (d) {
                       resolve(d.data || d);
@@ -2099,9 +2287,15 @@ var mp = (function () {
           if (typeof params == 'object') {
             var querystr = (function (obj) {
               var str = [];
-              for (var p in obj)
-                if (obj.hasOwnProperty(p))
-                  str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+              for (var p in obj) {
+                if (obj.hasOwnProperty(p)) {
+                  if (!obj[p])
+                    str.push(encodeURIComponent(p) + '=');
+                  else
+                    str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+                }
+              }
+
 
               return str.join("&");
             })(params);
