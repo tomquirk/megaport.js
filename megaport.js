@@ -18,11 +18,15 @@ var mp = (function () {
         authParams = {
           username: obj.username,
           password: obj.password,
-          oneTimePassword: obj.oneTimePassword
+          oneTimePassword: obj.oneTimePassword,
+          resetPassword: obj.resetPassword
         };
 
         if (!authParams.oneTimePassword)
           delete authParams.oneTimePassword;
+
+        if (!authParams.resetPassword)
+          delete authParams.resetPassword;
 
         if (typeof obj.target_username == 'string')
           authParams.target_username = obj.target_username;
