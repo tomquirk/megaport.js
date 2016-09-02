@@ -2280,8 +2280,8 @@ var mp = (function () {
       return new Promise(function (resolve, reject) {
         method = method.toUpperCase();
 
-        //        if (typeof token == 'string')
-        //          url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + token;
+        //                if (typeof token == 'string')
+        //                  url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + token;
 
         if (method == 'GET') {
           if (typeof params == 'object') {
@@ -2299,7 +2299,7 @@ var mp = (function () {
 
               return str.join("&");
             })(params);
-            url += '&' + querystr;
+            url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + querystr;
           }
           url = url.replace(/&$/, '');
           //          console.log(url);
