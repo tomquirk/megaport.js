@@ -2303,7 +2303,7 @@ var mp = (function () {
 
               return str.join("&");
             })(params);
-            url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + querystr;
+            url += ((url.indexOf('?') > -1) ? '&' : '?') + querystr;
           }
           url = url.replace(/&$/, '');
           //          console.log(url);
