@@ -1540,7 +1540,8 @@ var mp = (function () {
                       resolve(d.data || d);
                     },
                     function (d) {
-                      reject(d);
+                      if (typeof reject == 'function')
+                        reject(d);
                       if (typeof errors == 'function')
                         errors(d);
                     }
