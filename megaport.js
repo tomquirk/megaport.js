@@ -1036,6 +1036,27 @@ var mp = (function () {
             });
           });
         },
+        integration: function (serviceUuid) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/secure/partner/' + serviceUuid, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
         checkPrice: function (rateLimit) {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
