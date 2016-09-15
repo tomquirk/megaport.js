@@ -18,11 +18,15 @@ var mp = (function () {
         authParams = {
           username: obj.username,
           password: obj.password,
-          oneTimePassword: obj.oneTimePassword
+          oneTimePassword: obj.oneTimePassword,
+          resetPassword: obj.resetPassword
         };
 
         if (!authParams.oneTimePassword)
           delete authParams.oneTimePassword;
+
+        if (!authParams.resetPassword)
+          delete authParams.resetPassword;
 
         if (typeof obj.target_username == 'string')
           authParams.target_username = obj.target_username;
@@ -1539,7 +1543,8 @@ var mp = (function () {
                   resolve(d.data || d);
                 },
                 function (d) {
-                  reject(d);
+                  if (typeof reject == 'function')
+                    reject(d);
                   if (typeof errors == 'function')
                     errors(d);
                 }
@@ -1556,7 +1561,8 @@ var mp = (function () {
                       resolve(d.data || d);
                     },
                     function (d) {
-                      reject(d);
+                      if (typeof reject == 'function')
+                        reject(d);
                       if (typeof errors == 'function')
                         errors(d);
                     }
@@ -2301,8 +2307,8 @@ var mp = (function () {
       return new Promise(function (resolve, reject) {
         method = method.toUpperCase();
 
-        //        if (typeof token == 'string')
-        //          url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + token;
+        //                if (typeof token == 'string')
+        //                  url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + token;
 
         if (method == 'GET') {
           if (typeof params == 'object') {
@@ -2320,7 +2326,7 @@ var mp = (function () {
 
               return str.join("&");
             })(params);
-            url += '&' + querystr;
+            url += ((url.indexOf('?') > -1) ? '&' : '?') + querystr;
           }
           url = url.replace(/&$/, '');
           //          console.log(url);
