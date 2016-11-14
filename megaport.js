@@ -1784,7 +1784,7 @@ var mp = (function() {
           // password, newEmail
           return new Promise(function(resolve, reject) {
             q.onready(function() {
-              xhr.put(baseurl + '/email/change', obj, innerthis.credentials.token)
+              xhr.post(baseurl + '/email/change', obj, innerthis.credentials.token)
                 .then(
                   function(d) {
                     resolve(d.data || d);
