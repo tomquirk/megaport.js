@@ -1805,7 +1805,7 @@ var mp = (function() {
           return new Promise(function(resolve, reject) {
             xhr.post(baseurl + '/email/verify', {
                 verifyToken: token
-              }, innerthis.credentials.token)
+              })
               .then(
                 function(d) {
                   resolve(d.data || d);
