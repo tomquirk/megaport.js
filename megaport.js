@@ -1801,6 +1801,26 @@ var mp = (function() {
             });
           });
         },
+        verifyEmail: function(token) {
+          return new Promise(function(resolve, reject) {
+            xhr.post(baseurl + '/email/verify', {
+                verifyToken: token
+              }, innerthis.credentials.token)
+              .then(
+                function(d) {
+                  resolve(d.data || d);
+                },
+                function(d) {
+                  if (typeof reject == 'function') {
+                    reject(d);
+                  } else {
+                    if (typeof errors == 'function')
+                      errors(d);
+                  }
+                }
+              );
+          });
+        },
         changePassword: function(obj) {
           return new Promise(function(resolve, reject) {
             q.onready(function() {
