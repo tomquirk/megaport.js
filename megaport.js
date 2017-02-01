@@ -986,51 +986,42 @@ var mp = (function() {
           });
         },
         cancel: function(now, rating, description) {
-          var innerThis = this;
           return new Promise(function(resolve, reject) {
             reject = reject || function() {};
             q.onready(function() {
-              innerThis.then(function(productObj) {
-                var obj = {};
-                if (rating || description)
-                  obj = {
-                    rating: rating || 3,
-                    description: description || ''
-                  };
-                xhr.jpost(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL'), obj, innerthis.credentials.token)
-                  .then(
-                    function(d) {
-                      resolve(d.data || d);
-                    }).catch(reject);
-              });
+              var obj = {};
+              if (rating || description)
+                obj = {
+                  rating: rating || 3,
+                  description: description || ''
+                };
+              xhr.jpost(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL'), obj, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }).catch(reject);
             });
           });
         },
         uncancel: function() {
-          var innerThis = this;
           return new Promise(function(resolve, reject) {
             q.onready(function() {
-              innerThis.then(function(productObj) {
-                xhr.jpost(baseurl + '/product/' + productId + '/action/UN_CANCEL', {}, innerthis.credentials.token)
-                  .then(
-                    function(d) {
-                      resolve(d.data || d);
-                    }).catch(reject);
-              });
+              xhr.jpost(baseurl + '/product/' + productId + '/action/UN_CANCEL', {}, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }).catch(reject);
             });
           });
         },
         cancelCharges: function(now) {
-          var innerThis = this;
           return new Promise(function(resolve, reject) {
             q.onready(function() {
-              innerThis.then(function(productObj) {
-                xhr.get(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL') + '/charges', {}, innerthis.credentials.token)
-                  .then(
-                    function(d) {
-                      resolve(d.data || d);
-                    }).catch(reject);
-              });
+              xhr.get(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL') + '/charges', {}, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }).catch(reject);
             });
           });
         },
@@ -1038,7 +1029,7 @@ var mp = (function() {
           var innerThis = this;
           return new Promise(function(resolve, reject) {
             q.onready(function() {
-              innerThis.then(function(productObj) {
+              innerThis.get().then(function(productObj) {
                 var type = '/' + productObj.productType.toLowerCase();
                 if (type == '/megaport')
                   type = '';
