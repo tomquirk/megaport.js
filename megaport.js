@@ -1044,10 +1044,12 @@ var mp = (function() {
             });
           });
         },
-        get: function() {
+        get: function(incResources) {
           return new Promise(function(resolve, reject) {
             q.onready(function() {
-              xhr.get(baseurl + '/product/' + productId, {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/product/' + productId, {
+                  incResources: (incResources ? 'true' : 'false')
+                }, innerthis.credentials.token)
                 .then(
                   function(d) {
                     resolve(d.data || d);
