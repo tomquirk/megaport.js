@@ -648,10 +648,12 @@ var mp = (function() {
       });
     };
 
-    this.ports = function() {
+    this.ports = function(incResources) {
       return new Promise(function(resolve, reject) {
         q.onready(function() {
-          xhr.get(baseurl + '/products', {}, innerthis.credentials.token)
+          xhr.get(baseurl + '/products', {
+              incResources: (incResources ? 'true' : 'false')
+            }, innerthis.credentials.token)
             .then(
               function(d) {
                 resolve(d.data);
