@@ -827,6 +827,19 @@ var mp = (function() {
             });
           });
         },
+        oracle: function(serviceUuid) {
+          var innerThis = this;
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.get(baseurl + '/secure/oracle/' + serviceUuid, {}, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
         integration: function(serviceUuid) {
           var innerThis = this;
           return new Promise(function(resolve, reject) {
