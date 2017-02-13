@@ -1166,10 +1166,10 @@ var mp = (function () {
             q.onready(function () {
               xhr.get(baseurl + '/marketplace/profiles', {
                 includeServices: (includeServices ? 'true' : 'false')
-              }, innerthis.credentials.token);
-            }).then(function (d) {
-              resolve(d.data || d);
-            }, reject);
+              }, innerthis.credentials.token).then(function (d) {
+                resolve(d.data || d);
+              }, reject);
+            });
           });
         },
         updateProfile: function (marketPlaceObj) {
@@ -1179,9 +1179,7 @@ var mp = (function () {
                 .then(function (d) {
                   resolve(d.data || d);
                 }, reject);
-            }).then(function (d) {
-              resolve(d.data || d);
-            }, reject);
+            });
           });
         },
         updateServices: function (servicesObj) {
@@ -1191,29 +1189,28 @@ var mp = (function () {
                 .then(function (d) {
                   resolve(d.data || d);
                 }, reject);
-            }).then(function (d) {
-              resolve(d.data || d);
-            }, reject);
+            });
           });
         },
         services: function (companyUid) {
           var url = '/marketplace/services' + (companyUid ? '/' + companyUid : '');
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.get(baseurl + url, {}, innerthis.credentials.token);
-            }).then(function (d) {
-              resolve(d.data || d);
-            }, reject);
+              xhr.get(baseurl + url, {}, innerthis.credentials.token)
+                .then(function (d) {
+                  resolve(d.data || d);
+                }, reject);
+            });
           });
         },
         profile: function (companyUid) {
           var url = '/marketplace/profile' + (companyUid ? '/' + companyUid : '');
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.get(baseurl + url, {}, innerthis.credentials.token);
-            }).then(function (d) {
-              resolve(d.data || d);
-            }, reject);
+              xhr.get(baseurl + url, {}, innerthis.credentials.token).then(function (d) {
+                resolve(d.data || d);
+              }, reject);
+            });
           });
         }
       };
