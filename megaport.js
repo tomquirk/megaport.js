@@ -1091,6 +1091,9 @@ var mp = (function () {
       if (name == 'partnerPorts')
         url = '/dropdowns/partner/megaports';
 
+      if (name == 'networkRegions')
+        url = '/networkRegions';
+
       // /v2/dropdowns/person/{personId}/megaports
 
 
