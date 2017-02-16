@@ -1971,32 +1971,32 @@ var mp = (function () {
 
         switch (method) {
 
-        case 'POST':
-          rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-          if (typeof params == 'object') {
-            params = (function (obj) {
-              var str = [];
-              for (var p in obj)
-                if (obj.hasOwnProperty(p))
-                  str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+          case 'POST':
+            rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            if (typeof params == 'object') {
+              params = (function (obj) {
+                var str = [];
+                for (var p in obj)
+                  if (obj.hasOwnProperty(p))
+                    str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
 
-              return str.join('&');
-            })(params);
-          }
-          rq.send(params);
-          break;
-        case 'JPOST':
-          rq.setRequestHeader('Content-Type', 'application/json');
-          rq.send(JSON.stringify(params));
-          break;
+                return str.join('&');
+              })(params);
+            }
+            rq.send(params);
+            break;
+          case 'JPOST':
+            rq.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            rq.send(JSON.stringify(params));
+            break;
 
-        case 'PUT':
-          rq.setRequestHeader('Content-Type', 'application/json');
-          rq.send(JSON.stringify(params));
-          break;
+          case 'PUT':
+            rq.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            rq.send(JSON.stringify(params));
+            break;
 
-        default:
-          rq.send();
+          default:
+            rq.send();
         }
 
       });
