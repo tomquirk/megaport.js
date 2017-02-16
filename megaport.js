@@ -9,7 +9,11 @@
 var mp = (function () {
   var cache = {};
   var onready = [],
-    failauth, authUrl, authParams, errors, maintenance, hardfail;
+    authUrl, authParams, errors,
+    failauth = function () {},
+    maintenance = function () {},
+    hardfail = function () {};
+
   var exports = function (baseurl) {
     var innerthis = this;
     this.baseurl = baseurl;
@@ -97,14 +101,8 @@ var mp = (function () {
               function (d) {
                 this.credentials = {};
                 resolve(d.data || d);
-              },
-              function (d) {
-                reject(d);
-                if (typeof errors == 'function')
-                  errors(d);
-
-              }
-            );
+              })
+            .catch(reject);
         });
       });
     };
@@ -116,16 +114,11 @@ var mp = (function () {
           xhr.get(baseurl + '/logout', {}, innerthis.credentials.token)
             .then(
               function (d) {
-                this.credentials = {};
+                innerThis.credentials = {};
                 resolve(d.data || d);
-              },
-              function (d) {
-                reject(d);
-                if (typeof errors == 'function')
-                  errors(d);
-
               }
-            );
+            )
+            .catch(reject);
         });
       });
     };
@@ -138,15 +131,10 @@ var mp = (function () {
           })
           .then(
             function (d) {
-              this.credentials = {};
+              innerThis.credentials = {};
               resolve(d.data || d);
-            },
-            function (d) {
-              reject(d);
-              if (typeof errors == 'function')
-                errors(d);
             }
-          );
+          ).catch(reject);
       });
     };
 
@@ -159,19 +147,13 @@ var mp = (function () {
           })
           .then(
             function (d) {
-              this.credentials = {};
+              innerThis.credentials = {};
               resolve(d.data || d);
-            },
-            function (d) {
-              reject(d);
-              if (typeof errors == 'function')
-                errors(d);
             }
-          );
+          ).catch(reject);
       });
     };
 
-    // /secure/dropdowns/locations
     this.ready = function (cb) {
       onready.push(cb);
       if (typeof innerthis.credentials.token == 'string')
@@ -208,14 +190,8 @@ var mp = (function () {
             .then(
               function (d) {
                 resolve(d.data || d);
-              },
-              function (d) {
-                reject(d);
-                if (typeof errors == 'function')
-                  errors(d);
-
               }
-            );
+            ).catch(reject);
         });
       });
     };
@@ -493,8 +469,8 @@ var mp = (function () {
             var str = [];
             for (var p in obj)
               if (obj.hasOwnProperty(p))
-                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-            return str.join("&");
+                str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+            return str.join('&');
           })({
             billingMonth: obj.month,
             billingYear: obj.year
@@ -528,126 +504,6 @@ var mp = (function () {
       };
     };
 
-    this.tickets = function (ticketId) {
-      return {
-        filter: function (status) {
-          return new Promise(function (resolve, reject) {
-            q.onready(function () {
-              xhr.get(baseurl + '/ticket', {
-                  status: status || 'ANY'
-                }, innerthis.credentials.token)
-                .then(
-                  function (d) {
-                    resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  }
-                );
-            });
-          });
-        },
-        comment: function (message) {
-          return new Promise(function (resolve, reject) {
-            q.onready(function () {
-              xhr.post(baseurl + '/ticket/' + ticketId + '/comment', {
-                  comment: message
-                }, innerthis.credentials.token)
-                .then(
-                  function (d) {
-                    resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  }
-                );
-            });
-          });
-        },
-        close: function () {
-          return new Promise(function (resolve, reject) {
-            q.onready(function () {
-              xhr.put(baseurl + '/ticket/' + ticketId + '/close', {}, innerthis.credentials.token)
-                .then(
-                  function (d) {
-                    resolve(d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  }
-                );
-            });
-          });
-        },
-        create: function (obj) {
-          return new Promise(function (resolve, reject) {
-            q.onready(function () {
-              xhr.post(baseurl + '/ticket', obj, innerthis.credentials.token)
-                .then(
-                  function (d) {
-                    resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  }
-                );
-            });
-          });
-        },
-        then: (ticketId ? function (resolve, reject) {
-          q.onready(function () {
-            xhr.get(baseurl + '/ticket/' + ticketId, {}, innerthis.credentials.token)
-              .then(
-                function (d) {
-                  resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
-                }
-              );
-          });
-        } : function (resolve, reject) {
-          q.onready(function () {
-            xhr.get(baseurl + '/ticket', {
-                status: 'ANY'
-              }, innerthis.credentials.token)
-              .then(
-                function (d) {
-                  resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
-                }
-              );
-          });
-        })
-      };
-    };
-
 
     this.ixp = function (ixpid) {
       return {
@@ -657,13 +513,8 @@ var mp = (function () {
               .then(
                 function (d) {
                   resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
                 }
-              );
+              ).catch(reject);
           });
         },
         peers: function () {
@@ -804,20 +655,17 @@ var mp = (function () {
       });
     };
 
-    this.ports = function () {
+    this.ports = function (incResources) {
       return new Promise(function (resolve, reject) {
         q.onready(function () {
-          xhr.get(baseurl + '/products', {}, innerthis.credentials.token)
+          xhr.get(baseurl + '/products', {
+              incResources: (incResources ? 'true' : 'false')
+            }, innerthis.credentials.token)
             .then(
               function (d) {
                 resolve(d.data);
-              },
-              function (d) {
-                reject(d);
-                if (typeof errors == 'function')
-                  errors(d);
               }
-            );
+            ).catch(reject);
         });
       });
     };
@@ -831,13 +679,8 @@ var mp = (function () {
             .then(
               function (d) {
                 resolve(d.data || d);
-              },
-              function (d) {
-                reject(d);
-                if (typeof errors == 'function')
-                  errors(d);
               }
-            );
+            ).catch(reject);
         });
       });
     };
@@ -852,16 +695,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -873,16 +708,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -894,21 +721,12 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         }
       };
-
     };
 
     this.eway = function () {
@@ -921,16 +739,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -942,16 +752,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -965,16 +767,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -988,16 +782,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -1009,16 +795,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -1030,16 +808,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         }
@@ -1059,16 +829,21 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
+            });
+          });
+        },
+        oracle: function (serviceUuid) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/secure/oracle/' + serviceUuid, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
             });
           });
         },
@@ -1080,16 +855,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -1097,7 +864,7 @@ var mp = (function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              innerThis.then(function (productObj) {
+              innerThis.get().then(function (productObj) {
                 var type = '/' + productObj.productType.toLowerCase();
                 if (type == '/megaport')
                   type = '';
@@ -1107,14 +874,8 @@ var mp = (function () {
                   .then(
                     function (d) {
                       resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
+                    }).catch(reject);
+              }).catch(reject);
             });
           });
         },
@@ -1122,67 +883,48 @@ var mp = (function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              innerThis.then(function () {
-                var sObj = {};
-                if (newSpeed)
-                  sObj.newSpeed = newSpeed;
-                xhr.get(baseurl + '/product/' + productId + '/rating/' + year + '/' + month, sObj, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
+              var sObj = {};
+              if (newSpeed)
+                sObj.newSpeed = newSpeed;
+              xhr.get(baseurl + '/product/' + productId + '/rating/' + year + '/' + month, sObj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
             });
           });
         },
-        types: function () {
-          var innerThis = this;
-          return new Promise(function (resolve, reject) {
-            q.onready(function () {
-              innerThis.then(function (productObj) {
-                var type = '/' + productObj.productType.toLowerCase();
-                if (type == '/megaport')
-                  type = '';
-                xhr.get(baseurl + '/product' + type + '/' + productId + '/types', {}, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
-            });
-          });
-        },
+        //        types: function() {
+        //          var innerThis = this;
+        //          return new Promise(function(resolve, reject) {
+        //            q.onready(function() {
+        //              innerThis.then(function(productObj) {
+        //                var type = '/' + productObj.productType.toLowerCase();
+        //                if (type == '/megaport')
+        //                  type = '';
+        //                xhr.get(baseurl + '/product' + type + '/' + productId + '/types', {}, innerthis.credentials.token)
+        //                  .then(
+        //                    function(d) {
+        //                      resolve(d.data || d);
+        //                    }
+        //                  ).catch(reject);
+        //              });
+        //            });
+        //          });
+        //        },
         graph: function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              innerThis.then(function () {
-                xhr.get(baseurl + '/graph/', {
-                    productIdOrUid: productId
-                  }, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
+              xhr.get(baseurl + '/graph/', {
+                  productIdOrUid: productId
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
             });
           });
         },
@@ -1197,19 +939,12 @@ var mp = (function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              innerThis.then(function () {
-                xhr.get(baseurl + '/graph/mbps/', pObj, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
+              xhr.get(baseurl + '/graph/mbps/', pObj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
             });
           });
         },
@@ -1217,19 +952,12 @@ var mp = (function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              innerThis.then(function () {
-                xhr.get(baseurl + '/product/' + productId + '/logs', {}, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
+              xhr.get(baseurl + '/product/' + productId + '/logs', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
             });
           });
         },
@@ -1250,16 +978,8 @@ var mp = (function () {
                   function (d) {
                     d.data = d.data || [];
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -1271,16 +991,7 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  }
-                );
+                  }).catch(reject);
             });
           });
         },
@@ -1292,83 +1003,47 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  }
-                );
+                  }).catch(reject);
             });
           });
         },
         cancel: function (now, rating, description) {
-          var innerThis = this;
           return new Promise(function (resolve, reject) {
             reject = reject || function () {};
             q.onready(function () {
-              innerThis.then(function (productObj) {
-                var obj = {};
-                if (rating || description)
-                  obj = {
-                    rating: rating || 3,
-                    description: description || ''
-                  };
-                xhr.jpost(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL'), obj, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
+              var obj = {};
+              if (rating || description)
+                obj = {
+                  rating: rating || 3,
+                  description: description || ''
+                };
+              xhr.jpost(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL'), obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }).catch(reject);
             });
           });
         },
         uncancel: function () {
-          var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              innerThis.then(function (productObj) {
-                xhr.jpost(baseurl + '/product/' + productId + '/action/UN_CANCEL', {}, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
+              xhr.jpost(baseurl + '/product/' + productId + '/action/UN_CANCEL', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }).catch(reject);
             });
           });
         },
         cancelCharges: function (now) {
-          var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              innerThis.then(function (productObj) {
-                xhr.get(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL') + '/charges', {}, innerthis.credentials.token)
-                  .then(
-                    function (d) {
-                      resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
-              });
+              xhr.get(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL') + '/charges', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }).catch(reject);
             });
           });
         },
@@ -1376,7 +1051,7 @@ var mp = (function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              innerThis.then(function (productObj) {
+              innerThis.get().then(function (productObj) {
                 var type = '/' + productObj.productType.toLowerCase();
                 if (type == '/megaport')
                   type = '';
@@ -1384,30 +1059,22 @@ var mp = (function () {
                   .then(
                     function (d) {
                       resolve(d.data || d);
-                    },
-                    function (d) {
-                      reject(d);
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  );
+                    }).catch(reject);
               });
             });
           });
         },
-        then: function (resolve, reject) {
-          q.onready(function () {
-            xhr.get(baseurl + '/product/' + productId, {}, innerthis.credentials.token)
-              .then(
-                function (d) {
-                  resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
-                }
-              );
+        get: function (incResources) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/product/' + productId, {
+                  incResources: (incResources ? 'true' : 'false')
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }).catch(reject);
+            });
           });
         }
       };
@@ -1425,8 +1092,14 @@ var mp = (function () {
       if (name == 'locations')
         url = '/locations';
 
+      if (name == 'circuits')
+        url = '/locations/circuits';
+
       if (name == 'partnerPorts')
         url = '/dropdowns/partner/megaports';
+
+      if (name == 'networkRegions')
+        url = '/networkRegions';
 
       // /v2/dropdowns/person/{personId}/megaports
 
@@ -1442,17 +1115,14 @@ var mp = (function () {
               function (d) {
                 cache[url] = d;
                 resolve(d.data || d);
-              },
-              function (d) {
-                console.log(d);
-              }
-            );
+              }).catch(reject);
         });
       });
     };
 
 
     this.markets = function (marketId) {
+
       return {
         update: function (obj) {
           return new Promise(function (resolve, reject) {
@@ -1461,16 +1131,7 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  }
-                );
+                  }).catch(reject);
             });
           });
         },
@@ -1482,16 +1143,7 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
-                  }
-                );
+                  }).catch(reject);
             });
           });
         },
@@ -1502,13 +1154,7 @@ var mp = (function () {
               .then(
                 function (d) {
                   resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
-                }
-              );
+                }).catch(reject);
           });
         } : function (resolve, reject) {
           q.onready(function () {
@@ -1516,18 +1162,69 @@ var mp = (function () {
               .then(
                 function (d) {
                   resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
-                }
-              );
+                }).catch(reject);
           });
         })
       };
     };
 
+
+    this.marketplace = function () {
+      return {
+        get: function (includeServices) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/marketplace/profiles', {
+                includeServices: (includeServices ? 'true' : 'false')
+              }, innerthis.credentials.token).then(function (d) {
+                resolve(d.data || d);
+              }, reject);
+            });
+          });
+        },
+        updateProfile: function (marketPlaceObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/marketplace/profile', marketPlaceObj, innerthis.credentials.token)
+                .then(function (d) {
+                  resolve(d.data || d);
+                }, reject);
+            });
+          });
+        },
+        updateServices: function (servicesObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.put(baseurl + '/marketplace/services', servicesObj, innerthis.credentials.token)
+                .then(function (d) {
+                  resolve(d.data || d);
+                }, reject);
+            });
+          });
+        },
+        services: function (companyUid) {
+          var url = '/marketplace/services' + (companyUid ? '/' + companyUid : '');
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + url, {}, innerthis.credentials.token)
+                .then(function (d) {
+                  resolve(d.data || d);
+                }, reject);
+            });
+          });
+        },
+        profile: function (companyUid) {
+          var url = '/marketplace/profile' + (companyUid ? '/' + companyUid : '');
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + url, {}, innerthis.credentials.token).then(function (d) {
+                resolve(d.data || d);
+              }, reject);
+            });
+          });
+        }
+      };
+    };
 
     this.company = function (companyUid) {
       companyUid = companyUid || innerthis.credentials.companyUid;
@@ -1698,49 +1395,25 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
         delete: {}, // needs to be written
-        then: (employmentId ? function (resolve, reject) {
-          q.onready(function () {
-            xhr.get(baseurl + '/employment/' + employmentId, {}, innerthis.credentials.token)
+        get: function () {
+          return new Promise(function (resolve, reject) {
+            var url = baseurl + '/employment';
+            if (employmentId)
+              url = baseurl + '/employment/' + employmentId;
+
+            xhr.get(url, {}, innerthis.credentials.token)
               .then(
                 function (d) {
                   resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
-                }
-              );
+                }).catch(reject);
           });
-        } : function (resolve, reject) {
-          q.onready(function () {
-            xhr.get(baseurl + '/employment', {}, innerthis.credentials.token)
-              .then(
-                function (d) {
-                  resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
-                }
-              );
-          });
-        })
+        }
       };
     };
 
@@ -1754,16 +1427,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -1774,17 +1439,34 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
+          });
+        },
+        changeEmail: function (obj) {
+          // password, newEmail
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.post(baseurl + '/email/change', obj, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
+        verifyEmail: function (token) {
+          return new Promise(function (resolve, reject) {
+            xhr.post(baseurl + '/email/verify', {
+                verifyToken: token
+              })
+              .then(
+                function (d) {
+                  resolve(d.data || d);
+                }
+              ).catch(reject);
           });
         },
         changePassword: function (obj) {
@@ -1794,16 +1476,8 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
@@ -1814,32 +1488,21 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
-        then: function (resolve, reject) {
-          q.onready(function () {
-            xhr.get(baseurl + '/employee/' + innerthis.credentials.personId, {}, innerthis.credentials.token)
-              .then(
-                function (d) {
-                  resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
-                }
-              );
+        get: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/employee/' + innerthis.credentials.personId, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
           });
         }
       };
@@ -1854,42 +1517,32 @@ var mp = (function () {
                 .then(
                   function (d) {
                     resolve(d.data || d);
-                  },
-                  function (d) {
-                    if (typeof reject == 'function') {
-                      reject(d);
-                    } else {
-                      if (typeof errors == 'function')
-                        errors(d);
-                    }
                   }
-                );
+                ).catch(reject);
             });
           });
         },
-        then: function (resolve, reject) {
-          q.onready(function () {
-            xhr.get(baseurl + '/employee/' + id, {}, innerthis.credentials.token)
-              .then(
-                function (d) {
-                  resolve(d.data || d);
-                },
-                function (d) {
-                  reject(d);
-                  if (typeof errors == 'function')
-                    errors(d);
-                }
-              );
+        get: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/employee/' + id, {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
           });
         }
       };
     };
 
+    /* jshint ignore:start */
     function hash(str) {
       if (typeof str != 'string')
         str = JSON.stringify(str);
       if (Array.prototype.reduce) {
-        return str.split("").reduce(function (a, b) {
+        return str.split('').reduce(function (a, b) {
           a = ((a << 5) - a) + b.charCodeAt(0);
           return a & a;
         }, 0);
@@ -1903,6 +1556,7 @@ var mp = (function () {
       }
       return hsh;
     }
+    /* jshint ignore:end */
 
     function clone(obj) {
       return JSON.parse(JSON.stringify(obj));
@@ -2202,19 +1856,13 @@ var mp = (function () {
 
 
     this.register = function (obj) {
-      // https://git.megaport.com/snippets/82
       return new Promise(function (resolve, reject) {
         xhr.post(baseurl + '/social/registration', obj)
           .then(
             function (d) {
               resolve(d.data || d);
-            },
-            function (d) {
-              reject(d);
-              if (typeof errors == 'function')
-                errors(d);
-            }
-          );
+            })
+          .catch(reject);
       });
     };
   };
@@ -2257,79 +1905,6 @@ var mp = (function () {
     };
   }
 
-  // simple promise buider
-  function Promise(fn, additional) {
-    var state = 'pending';
-    var value;
-    var deferred = null;
-
-    function resolve(newValue) {
-      if (newValue && typeof newValue.then === 'function') {
-        newValue.then(resolve, reject);
-        return;
-      }
-      state = 'resolved';
-      value = newValue;
-
-      if (deferred) {
-        handle(deferred);
-      }
-    }
-
-    function reject(reason) {
-      state = 'rejected';
-      value = reason;
-
-      if (deferred) {
-        handle(deferred);
-      }
-    }
-
-    function handle(handler) {
-      if (state === 'pending') {
-        deferred = handler;
-        return;
-      }
-
-      var handlerCallback;
-
-      if (state === 'resolved') {
-        handlerCallback = handler.onResolved;
-      } else {
-        handlerCallback = handler.onRejected;
-      }
-
-      if (!handlerCallback) {
-        if (state === 'resolved') {
-          handler.resolve(value);
-        } else {
-          handler.reject(value);
-        }
-        return;
-      }
-
-      var ret = handlerCallback(value);
-      handler.resolve(ret);
-    }
-
-    this.then = function (onResolved, onRejected) {
-      return new Promise(function (resolve, reject) {
-        handle({
-          onResolved: onResolved,
-          onRejected: onRejected,
-          resolve: resolve,
-          reject: reject
-        });
-      });
-    };
-
-    for (var func in additional)
-      if (typeof additional[func] == 'function')
-        this[func] = additional[func];
-
-    fn(resolve, reject);
-  }
-
   var pendingXhr = [];
   var xhreq = function () {
     var innerthis = this;
@@ -2338,9 +1913,6 @@ var mp = (function () {
       syncro = syncro || true;
       return new Promise(function (resolve, reject) {
         method = method.toUpperCase();
-
-        //                if (typeof token == 'string')
-        //                  url += ((url.indexOf('?') > -1) ? '&' : '?') + 'token=' + token;
 
         if (method == 'GET') {
           if (typeof params == 'object') {
@@ -2354,14 +1926,11 @@ var mp = (function () {
                     str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
                 }
               }
-
-
-              return str.join("&");
+              return str.join('&');
             })(params);
             url += ((url.indexOf('?') > -1) ? '&' : '?') + querystr;
           }
           url = url.replace(/&$/, '');
-          //          console.log(url);
         }
 
         var rq = new XMLHttpRequest();
@@ -2389,11 +1958,10 @@ var mp = (function () {
             });
           }
           if (rq.status == 400) {
-
+            console.warn(400);
           }
           if (rq.status == 401) {
-            if (typeof failauth == 'function')
-              failauth(rq);
+            failauth(rq);
           }
         };
         rq.onerror = function () {
@@ -2403,53 +1971,34 @@ var mp = (function () {
 
         switch (method) {
 
-          case 'POST':
-            rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            if (typeof params == 'object') {
-              params = (function (obj) {
-                var str = [];
-                for (var p in obj)
-                  if (obj.hasOwnProperty(p))
-                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        case 'POST':
+          rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+          if (typeof params == 'object') {
+            params = (function (obj) {
+              var str = [];
+              for (var p in obj)
+                if (obj.hasOwnProperty(p))
+                  str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
 
-                return str.join("&");
-              })(params);
-            }
-            rq.send(params);
-            break;
-          case 'JPOST':
-            rq.setRequestHeader('Content-Type', 'application/json');
-            rq.send(JSON.stringify(params));
-            break;
+              return str.join('&');
+            })(params);
+          }
+          rq.send(params);
+          break;
+        case 'JPOST':
+          rq.setRequestHeader('Content-Type', 'application/json');
+          rq.send(JSON.stringify(params));
+          break;
 
-          case 'PUT':
-            rq.setRequestHeader('Content-Type', 'application/json');
-            rq.send(JSON.stringify(params));
-            break;
+        case 'PUT':
+          rq.setRequestHeader('Content-Type', 'application/json');
+          rq.send(JSON.stringify(params));
+          break;
 
-          default:
-            rq.send();
+        default:
+          rq.send();
         }
 
-        //        if (method == 'POST') {
-        //          rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        //          if (typeof params == 'object') {
-        //            params = (function (obj) {
-        //              var str = [];
-        //              for (var p in obj)
-        //                if (obj.hasOwnProperty(p))
-        //                  str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        //
-        //              return str.join("&");
-        //            })(params);
-        //          }
-        //          rq.send(params);
-        //        } else if (method == 'PUT') {
-        //          rq.setRequestHeader('Content-Type', 'application/json');
-        //          rq.send(JSON.stringify(params));
-        //        } else {
-        //          rq.send();
-        //        }
       });
     };
 
