@@ -1238,7 +1238,7 @@ var mp = (function() {
         serviceTypes: function() {
           return new Promise(function(resolve, reject) {
             q.onready(function() {
-              xhr.get(baseurl + '/v2/marketplace/servicesType', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/marketplace/servicesType', {}, innerthis.credentials.token)
                 .then(function(d) {
                   resolve(d.data || d);
                 }, reject);
