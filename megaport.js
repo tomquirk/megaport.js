@@ -1244,7 +1244,17 @@ var mp = (function() {
                 }, reject);
             });
           });
-        }
+        },
+        contact: function(contactObj) {
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.post(baseurl + '/marketplace/contact', contactObj, innerthis.credentials.token)
+                .then(function(d) {
+                  resolve(d.data || d);
+                }, reject);
+            });
+          });
+        },
       };
     };
 
