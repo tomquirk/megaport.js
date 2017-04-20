@@ -138,10 +138,11 @@ var mp = (function () {
       });
     };
 
-    this.passwordReset = function (resetToken, password) {
+    this.passwordReset = function (email, resetToken, password) {
       var innerThis = this;
       return new Promise(function (resolve, reject) {
         xhr.post(baseurl + '/password/reset', {
+            email: email,
             resetToken: resetToken,
             password: password
           })
