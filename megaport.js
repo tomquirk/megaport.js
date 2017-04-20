@@ -705,7 +705,9 @@ var mp = (function () {
           var innerThis = this;
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.get(baseurl + '/messageEvents', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/messageEvents', {
+                  destination: destination
+                }, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
@@ -858,6 +860,20 @@ var mp = (function () {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
+            });
+          });
+        },
+        checkVlan: function (vlan) {
+          var innerThis = this;
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/product/port/' + productId + '/vlan', {
+                  vlan: vlan
+                }, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  }).catch(reject);
             });
           });
         },
@@ -1223,7 +1239,37 @@ var mp = (function () {
               }, reject);
             });
           });
-        }
+        },
+        providerTypes: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/marketplace/providerType', {}, innerthis.credentials.token)
+                .then(function (d) {
+                  resolve(d.data || d);
+                }, reject);
+            });
+          });
+        },
+        serviceTypes: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/marketplace/servicesType', {}, innerthis.credentials.token)
+                .then(function (d) {
+                  resolve(d.data || d);
+                }, reject);
+            });
+          });
+        },
+        contact: function (contactObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.jpost(baseurl + '/marketplace/contact', contactObj, innerthis.credentials.token)
+                .then(function (d) {
+                  resolve(d.data || d);
+                }, reject);
+            });
+          });
+        },
       };
     };
 
@@ -1972,32 +2018,32 @@ var mp = (function () {
 
         switch (method) {
 
-          case 'POST':
-            rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            if (typeof params == 'object') {
-              params = (function (obj) {
-                var str = [];
-                for (var p in obj)
-                  if (obj.hasOwnProperty(p))
-                    str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+        case 'POST':
+          rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+          if (typeof params == 'object') {
+            params = (function (obj) {
+              var str = [];
+              for (var p in obj)
+                if (obj.hasOwnProperty(p))
+                  str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
 
-                return str.join('&');
-              })(params);
-            }
-            rq.send(params);
-            break;
-          case 'JPOST':
-            rq.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-            rq.send(JSON.stringify(params));
-            break;
+              return str.join('&');
+            })(params);
+          }
+          rq.send(params);
+          break;
+        case 'JPOST':
+          rq.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+          rq.send(JSON.stringify(params));
+          break;
 
-          case 'PUT':
-            rq.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-            rq.send(JSON.stringify(params));
-            break;
+        case 'PUT':
+          rq.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+          rq.send(JSON.stringify(params));
+          break;
 
-          default:
-            rq.send();
+        default:
+          rq.send();
         }
 
       });
