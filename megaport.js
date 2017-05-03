@@ -115,6 +115,7 @@ var mp = (function() {
     };
 
     this.logout = function() {
+      sessionXhrLog = [];
       var innerThis = this;
       return new Promise(function(resolve, reject) {
         q.onready(function() {
@@ -2026,6 +2027,7 @@ var mp = (function() {
               status: rq.status,
               data: JSON.parse(rq.responseText)
             });
+            logPbj.responseBody = rq.responseText;
           }
           if (rq.status == 400) {
             console.warn(400);
@@ -2033,6 +2035,8 @@ var mp = (function() {
           if (rq.status == 401) {
             failauth(rq);
           }
+
+          sessionXhrLog.push(logPbj);
         };
         rq.onerror = function() {
 
