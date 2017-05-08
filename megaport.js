@@ -741,6 +741,118 @@ var mp = (function() {
       };
     };
 
+    this.stripe = function() {
+      return {
+        getPayment: function(paymentId) {
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.get(baseurl + '/stripe/payment/' + paymentId, {}, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
+        getPayments: function(supplierId) {
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.get(baseurl + '/stripe/payments', {
+                  supplierId: supplierId
+                }, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
+        deleteCard: function(cardId) {
+          var innerThis = this;
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.delete(baseurl + '/stripe/card/' + cardId, {}, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
+        getCard: function(cardId) {
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.get(baseurl + '/stripe/card/' + cardId, {}, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
+        getCards: function(supplierId) {
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.get(baseurl + '/stripe/card', {
+                  supplierId: supplierId
+                }, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
+        updateCard: function(cardObj) {
+          // {autoPay, id, card: {name, expMonth, expYear} }
+          var innerThis = this;
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.put(baseurl + '/stripe/card', cardObj, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
+        registerCard: function(cardObj) {
+          //{ companyUid, autoPay, supplierId, cardToken }
+          var innerThis = this;
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.post(baseurl + '/stripe/card', cardObj, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
+        makePayment: function(paymentObj) {
+          // { companyUid, supplierId, currency, amount, description }
+          var innerThis = this;
+          return new Promise(function(resolve, reject) {
+            q.onready(function() {
+              xhr.post(baseurl + '/stripe/payment', paymentObj, innerthis.credentials.token)
+                .then(
+                  function(d) {
+                    resolve(d.data || d);
+                  }
+                ).catch(reject);
+            });
+          });
+        },
+      };
+    };
+
     this.eway = function() {
       return {
         makePayment: function(amountInCents) {
