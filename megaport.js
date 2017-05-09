@@ -827,7 +827,7 @@ var mp = (function() {
           var innerThis = this;
           return new Promise(function(resolve, reject) {
             q.onready(function() {
-              xhr.post(baseurl + '/stripe/card', cardObj, innerthis.credentials.token)
+              xhr.jpost(baseurl + '/stripe/card', cardObj, innerthis.credentials.token)
                 .then(
                   function(d) {
                     resolve(d.data || d);
@@ -841,7 +841,7 @@ var mp = (function() {
           var innerThis = this;
           return new Promise(function(resolve, reject) {
             q.onready(function() {
-              xhr.post(baseurl + '/stripe/payment', paymentObj, innerthis.credentials.token)
+              xhr.jpost(baseurl + '/stripe/payment', paymentObj, innerthis.credentials.token)
                 .then(
                   function(d) {
                     resolve(d.data || d);
