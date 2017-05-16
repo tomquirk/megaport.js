@@ -1316,7 +1316,7 @@ var mp = (function() {
                 includeServices: (includeServices ? 'true' : 'false')
               }, innerthis.credentials.token).then(function(d) {
                 resolve(d.data || d);
-              }, reject);
+              }).catch(reject);
             });
           });
         },
@@ -1326,7 +1326,7 @@ var mp = (function() {
               xhr.put(baseurl + '/marketplace/profile', marketPlaceObj, innerthis.credentials.token)
                 .then(function(d) {
                   resolve(d.data || d);
-                }, reject);
+                }).catch(reject);
             });
           });
         },
@@ -1336,7 +1336,7 @@ var mp = (function() {
               xhr.put(baseurl + '/marketplace/services', servicesObj, innerthis.credentials.token)
                 .then(function(d) {
                   resolve(d.data || d);
-                }, reject);
+                }).catch(reject);
             });
           });
         },
@@ -1347,7 +1347,7 @@ var mp = (function() {
               xhr.get(baseurl + url, {}, innerthis.credentials.token)
                 .then(function(d) {
                   resolve(d.data || d);
-                }, reject);
+                }).catch(reject);
             });
           });
         },
@@ -1357,7 +1357,7 @@ var mp = (function() {
             q.onready(function() {
               xhr.get(baseurl + url, {}, innerthis.credentials.token).then(function(d) {
                 resolve(d.data || d);
-              }, reject);
+              }).catch(reject);
             });
           });
         },
@@ -1367,7 +1367,7 @@ var mp = (function() {
               xhr.get(baseurl + '/marketplace/providerType', {}, innerthis.credentials.token)
                 .then(function(d) {
                   resolve(d.data || d);
-                }, reject);
+                }).catch(reject);
             });
           });
         },
@@ -1377,7 +1377,7 @@ var mp = (function() {
               xhr.get(baseurl + '/marketplace/servicesType', {}, innerthis.credentials.token)
                 .then(function(d) {
                   resolve(d.data || d);
-                }, reject);
+                }).catch(reject);
             });
           });
         },
@@ -1387,7 +1387,7 @@ var mp = (function() {
               xhr.jpost(baseurl + '/marketplace/contact', contactObj, innerthis.credentials.token)
                 .then(function(d) {
                   resolve(d.data || d);
-                }, reject);
+                }).catch(reject);
             });
           });
         },
@@ -1424,11 +1424,7 @@ var mp = (function() {
                 .then(
                   function(d) {
                     resolve(d);
-                  },
-                  function(d) {
-                    reject(d);
-                  }
-                );
+                  }).catch(reject);
             });
           });
         },
@@ -1473,11 +1469,7 @@ var mp = (function() {
                     .then(
                       function(d) {
                         resolve(d);
-                      },
-                      function(d) {
-                        reject(d);
-                      }
-                    );
+                      }).catch(reject);
                 });
               });
             }
