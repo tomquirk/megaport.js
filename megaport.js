@@ -6,17 +6,17 @@
 /* beautify ignore:end */
 
 /* jshint -W083, -W117  */
-var mp = (function() {
+var mp = (function () {
   var cache = {};
   var onready = [],
     authUrl, authParams, errors,
-    failauth = function() {},
-    maintenance = function() {},
-    hardfail = function() {};
+    failauth = function () {},
+    maintenance = function () {},
+    hardfail = function () {};
 
   var sessionXhrLog = [];
 
-  var exports = function(baseurl) {
+  var exports = function (baseurl) {
     var innerthis = this;
     this.baseurl = baseurl;
     this.credentials = {};
@@ -25,12 +25,12 @@ var mp = (function() {
     var xhr = new xhreq();
     var q = new que();
 
-    this.sessionLog = function() {
+    this.sessionLog = function () {
       if (this.credentials.supportOverride)
         return sessionXhrLog;
     };
 
-    this.auth = function(obj, success, fail) {
+    this.auth = function (obj, success, fail) {
       if (typeof obj.username == 'string' && typeof obj.password == 'string') {
         authUrl = baseurl + '/login';
         authParams = {
@@ -62,7 +62,7 @@ var mp = (function() {
       //console.log(authParams,authUrl);
       if (!authUrl || !authParams) return false;
       xhr.post(authUrl, authParams, null, true).then(
-        function(d) {
+        function (d) {
           innerthis.credentials = d.data;
           if (typeof success == 'function')
             success(d);
@@ -74,7 +74,7 @@ var mp = (function() {
           }
           q.ready();
         },
-        function(d) {
+        function (d) {
           if (typeof fail == 'function')
             fail(d);
           console.warn('Login Failed, constructor useless ' + d.status);
@@ -88,10 +88,10 @@ var mp = (function() {
       );
     };
 
-    this.reauth = function(cb) {
+    this.reauth = function (cb) {
       authUrl = baseurl + '/login/' + innerthis.credentials.token;
       xhr.post(authUrl, {}).then(
-        function(d) {
+        function (d) {
           innerthis.credentials = d.data;
           if (typeof cb == 'function')
             cb(d.data);
@@ -99,13 +99,13 @@ var mp = (function() {
       );
     };
 
-    this.inAuth = function(obj) {
+    this.inAuth = function (obj) {
       var innerThis = this;
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           xhr.post(baseurl + '/login', obj, true)
             .then(
-              function(d) {
+              function (d) {
                 this.credentials = {};
                 resolve(d.data || d);
               })
@@ -114,14 +114,14 @@ var mp = (function() {
       });
     };
 
-    this.logout = function() {
+    this.logout = function () {
       sessionXhrLog = [];
       var innerThis = this;
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           xhr.get(baseurl + '/logout', {}, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 innerThis.credentials = {};
                 resolve(d.data || d);
               }
@@ -131,14 +131,14 @@ var mp = (function() {
       });
     };
 
-    this.passwordRequest = function(email) {
+    this.passwordRequest = function (email) {
       var innerThis = this;
-      return new Promise(function(resolve, reject) {
+      return new Promise(function (resolve, reject) {
         xhr.post(baseurl + '/password/reset/request', {
             email: email
           })
           .then(
-            function(d) {
+            function (d) {
               innerThis.credentials = {};
               resolve(d.data || d);
             }
@@ -147,16 +147,16 @@ var mp = (function() {
     };
 
 
-    this.passwordReset = function(email, resetToken, password) {
+    this.passwordReset = function (email, resetToken, password) {
       var innerThis = this;
-      return new Promise(function(resolve, reject) {
+      return new Promise(function (resolve, reject) {
         xhr.post(baseurl + '/password/reset', {
             email: email,
             resetToken: resetToken,
             password: password
           })
           .then(
-            function(d) {
+            function (d) {
               innerThis.credentials = {};
               resolve(d.data || d);
             }
@@ -164,41 +164,41 @@ var mp = (function() {
       });
     };
 
-    this.ready = function(cb) {
+    this.ready = function (cb) {
       onready.push(cb);
       if (typeof innerthis.credentials.token == 'string')
         cb(innerthis.credentials);
       return innerthis;
     };
 
-    this.maintenance = function(cb) {
+    this.maintenance = function (cb) {
       maintenance = cb;
     };
 
-    this.hardfail = function(cb) {
+    this.hardfail = function (cb) {
       hardfail = cb;
     };
 
-    this.failauth = function(cb) {
+    this.failauth = function (cb) {
       failauth = cb;
     };
 
-    this.onerror = function(cb) {
+    this.onerror = function (cb) {
       errors = cb;
     };
 
-    this.destroy = function(cb) {
+    this.destroy = function (cb) {
       if (typeof cb == 'function')
         cb(cb);
     };
 
 
-    this.dashboard = function(ext) {
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+    this.dashboard = function (ext) {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           xhr.get(baseurl + '/dashboard' + (ext ? '/' + ext : ''), {}, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 resolve(d.data || d);
               }
             ).catch(reject);
@@ -206,16 +206,16 @@ var mp = (function() {
       });
     };
 
-    this.prompt = function(promptId) {
+    this.prompt = function (promptId) {
       return {
-        update: function(status, rating, description) {
-          return new Promise(function(resolve, reject) {
+        update: function (status, rating, description) {
+          return new Promise(function (resolve, reject) {
             xhr.put(baseurl + '/prompt/' + promptId + '?promptStatus=' + status + '&rating=' + rating + '&description' + encodeURI(description), {}, innerthis.credentials.token)
               .then(
-                function(d) {
+                function (d) {
                   resolve(d);
                 },
-                function(d) {
+                function (d) {
                   reject(d);
                   if (typeof errors == 'function')
                     errors(d);
@@ -223,15 +223,15 @@ var mp = (function() {
               );
           });
         },
-        create: function(obj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        create: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/prompt', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -243,25 +243,25 @@ var mp = (function() {
             });
           });
         },
-        then: (promptId ? function(resolve, reject) {
+        then: (promptId ? function (resolve, reject) {
           xhr.get(baseurl + '/prompt/' + promptId, {}, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 resolve(d.data || d);
               },
-              function(d) {
+              function (d) {
                 reject(d);
                 if (typeof errors == 'function')
                   errors(d);
               }
             );
-        } : function(resolve, reject) {
+        } : function (resolve, reject) {
           xhr.get(baseurl + '/prompt', {}, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 resolve(d.data || d);
               },
-              function(d) {
+              function (d) {
                 reject(d);
                 if (typeof errors == 'function')
                   errors(d);
@@ -271,15 +271,15 @@ var mp = (function() {
       };
     };
 
-    this.menuStats = function() {
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+    this.menuStats = function () {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           xhr.get(baseurl + '/menuStats', {}, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 resolve(d.data || d);
               },
-              function(d) {
+              function (d) {
                 reject(d);
                 if (typeof errors == 'function')
                   errors(d);
@@ -290,18 +290,18 @@ var mp = (function() {
       });
     };
 
-    this.agency = function(agencyId) {
+    this.agency = function (agencyId) {
       agencyId = agencyId || innerthis.credentials.companyUid;
       return {
-        createCustomer: function(custObj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        createCustomer: function (custObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/agency/' + agencyId + '/customer', custObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -313,15 +313,15 @@ var mp = (function() {
             });
           });
         },
-        customers: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        customers: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/agency/' + agencyId + '/customer', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -333,15 +333,15 @@ var mp = (function() {
             });
           });
         },
-        createAgent: function(agentObj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        createAgent: function (agentObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/agency/' + agencyId + '/agent', agentObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -353,15 +353,15 @@ var mp = (function() {
             });
           });
         },
-        updateAgent: function(agentId, agentObj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        updateAgent: function (agentId, agentObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/agent/' + agentId, agentObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -373,15 +373,15 @@ var mp = (function() {
             });
           });
         },
-        agent: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        agent: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/agency/' + agencyId + '/agent', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -393,15 +393,15 @@ var mp = (function() {
             });
           });
         },
-        agentOverview: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        agentOverview: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/agency/' + agencyId + '/agent/overview', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -413,15 +413,15 @@ var mp = (function() {
             });
           });
         },
-        createSubAgency: function(agencyObj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        createSubAgency: function (agencyObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/agency/' + agencyId + '/subAgency', agencyObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -433,15 +433,15 @@ var mp = (function() {
             });
           });
         },
-        subAgencies: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        subAgencies: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/agency/' + agencyId + '/subAgency', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -453,15 +453,15 @@ var mp = (function() {
             });
           });
         },
-        subAgenciesOverview: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        subAgenciesOverview: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/agency/' + agencyId + '/subAgency/overview', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -473,9 +473,9 @@ var mp = (function() {
             });
           });
         },
-        commissionReportCsv: function(obj) {
+        commissionReportCsv: function (obj) {
           obj = obj || {};
-          var querystr = (function(obj) {
+          var querystr = (function (obj) {
             var str = [];
             for (var p in obj)
               if (obj.hasOwnProperty(p))
@@ -487,19 +487,19 @@ var mp = (function() {
           });
           return baseurl + '/agency/' + agencyId + '/commissionReport/csv?token=' + innerthis.credentials.token + '&' + querystr;
         },
-        commissionReport: function(obj) {
+        commissionReport: function (obj) {
           obj = obj || {};
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/agency/' + agencyId + '/commissionReport', {
                   billingMonth: obj.month,
                   billingYear: obj.year
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -515,27 +515,27 @@ var mp = (function() {
     };
 
 
-    this.ixp = function(ixpid) {
+    this.ixp = function (ixpid) {
       return {
-        then: function(resolve, reject) {
-          q.onready(function() {
+        then: function (resolve, reject) {
+          q.onready(function () {
             xhr.get(baseurl + '/ixp', {}, innerthis.credentials.token)
               .then(
-                function(d) {
+                function (d) {
                   resolve(d.data || d);
                 }
               ).catch(reject);
           });
         },
-        peers: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        peers: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/ixp/' + ixpid + '/peers', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -547,15 +547,15 @@ var mp = (function() {
             });
           });
         },
-        peer: function(rsid, productid) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        peer: function (rsid, productid) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/ixp/' + ixpid + '/' + rsid + '/product/' + productid, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -567,15 +567,15 @@ var mp = (function() {
             });
           });
         },
-        prefixes: function(rsid, productid) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        prefixes: function (rsid, productid) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/ixp/' + ixpid + '/' + rsid + '/product/' + productid + '/prefixes', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -587,7 +587,7 @@ var mp = (function() {
             });
           });
         },
-        graph: function(productid, to, from) {
+        graph: function (productid, to, from) {
           var pObj = {
             productIdOrUid: productid
           };
@@ -596,14 +596,14 @@ var mp = (function() {
           if (!from)
             pObj.from = pObj.to - 86400000;
 
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/graph/', pObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -615,21 +615,21 @@ var mp = (function() {
             });
           });
         },
-        graphMbps: function(productid, from, to) {
+        graphMbps: function (productid, from, to) {
           var pObj = {
             productIdOrUid: productid
           };
           pObj.to = to || new Date().getTime();
           pObj.from = from || pObj.to - 86400000;
 
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/graph/mbps', pObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -646,15 +646,15 @@ var mp = (function() {
 
 
 
-    this.servicegroups = function() {
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+    this.servicegroups = function () {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           xhr.get(baseurl + '/servicegroups', {}, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 resolve(d.data || d);
               },
-              function(d) {
+              function (d) {
                 reject(d);
                 if (typeof errors == 'function')
                   errors(d);
@@ -665,14 +665,14 @@ var mp = (function() {
       });
     };
 
-    this.ports = function(incResources) {
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+    this.ports = function (incResources) {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           xhr.get(baseurl + '/products', {
               incResources: (incResources ? 'true' : 'false')
             }, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 resolve(d.data);
               }
             ).catch(reject);
@@ -680,14 +680,14 @@ var mp = (function() {
       });
     };
 
-    this.ixTypes = function(locationId) {
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+    this.ixTypes = function (locationId) {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           xhr.get(baseurl + '/product/ix/types', {
               locationId: locationId
             }, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 resolve(d.data || d);
               }
             ).catch(reject);
@@ -695,43 +695,43 @@ var mp = (function() {
       });
     };
 
-    this.notifications = function(destination) {
+    this.notifications = function (destination) {
       return {
-        destinations: function() {
+        destinations: function () {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/messageDestinations', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        events: function() {
+        events: function () {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/messageEvents', {
                   destination: destination
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        update: function(obj) {
+        update: function (obj) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/messageDestination/' + destination, obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
@@ -741,109 +741,109 @@ var mp = (function() {
       };
     };
 
-    this.stripe = function() {
+    this.stripe = function () {
       return {
-        getPayment: function(paymentId) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        getPayment: function (paymentId) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/stripe/payment/' + paymentId, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        getPayments: function(supplierId) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        getPayments: function (supplierId) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/stripe/payments', {
                   supplierId: supplierId
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        deleteCard: function(cardId) {
+        deleteCard: function (cardId) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.delete(baseurl + '/stripe/card/' + cardId, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        getCard: function(cardId) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        getCard: function (cardId) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/stripe/card/' + cardId, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        getCards: function(supplierId) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        getCards: function (supplierId) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/stripe/card', {
                   supplierId: supplierId
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        updateCard: function(cardObj) {
+        updateCard: function (cardObj) {
           // {autoPay, id, card: {name, expMonth, expYear} }
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/stripe/card', cardObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        registerCard: function(cardObj) {
+        registerCard: function (cardObj) {
           //{ companyUid, autoPay, supplierId, cardToken }
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/stripe/card', cardObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        makePayment: function(paymentObj) {
+        makePayment: function (paymentObj) {
           // { companyUid, supplierId, currency, amount, description }
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/stripe/payment', paymentObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
@@ -853,84 +853,84 @@ var mp = (function() {
       };
     };
 
-    this.eway = function() {
+    this.eway = function () {
       return {
-        makePayment: function(amountInCents) {
+        makePayment: function (amountInCents) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.post(baseurl + '/eway/tokenpayment?amountInCents=' + amountInCents, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        checkAccessCode: function(code) {
+        checkAccessCode: function (code) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.post(baseurl + '/eway/paymenttoken?accessCode=' + code, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        getAccessCodeRegister: function(redirectUrl) {
+        getAccessCodeRegister: function (redirectUrl) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/eway/accesscode/cardregistration', {
                   redirectUrl: redirectUrl
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        getAccessCodeOnceOff: function(cents) {
+        getAccessCodeOnceOff: function (cents) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/eway/accesscode/onceoffpayment', {
                   ammountInCents: cents
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        hasAccessCode: function() {
+        hasAccessCode: function () {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/eway/paymenttokenstatus', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        deleteAccessCode: function() {
+        deleteAccessCode: function () {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.delete(baseurl + '/eway/paymenttokenstatus', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
@@ -941,68 +941,68 @@ var mp = (function() {
       //eway / accesscode
     };
 
-    this.product = function(productId) {
+    this.product = function (productId) {
       // /v2/dropdowns/locations
 
       return {
-        azure: function(serviceUuid) {
+        azure: function (serviceUuid) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/secure/azure/' + serviceUuid, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        oracle: function(serviceUuid) {
+        oracle: function (serviceUuid) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/secure/oracle/' + serviceUuid, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        integration: function(serviceUuid) {
+        integration: function (serviceUuid) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/secure/partner/' + serviceUuid, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        checkVlan: function(vlan) {
+        checkVlan: function (vlan) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/product/port/' + productId + '/vlan', {
                   vlan: vlan
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }).catch(reject);
             });
           });
         },
-        checkPrice: function(rateLimit) {
+        checkPrice: function (rateLimit) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
-              innerThis.get().then(function(productObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              innerThis.get().then(function (productObj) {
                 var type = '/' + productObj.productType.toLowerCase();
                 if (type == '/megaport')
                   type = '';
@@ -1010,23 +1010,23 @@ var mp = (function() {
                     rateLimit: rateLimit
                   }, innerthis.credentials.token)
                   .then(
-                    function(d) {
+                    function (d) {
                       resolve(d.data || d);
                     }).catch(reject);
               }).catch(reject);
             });
           });
         },
-        history: function(year, month, newSpeed) {
+        history: function (year, month, newSpeed) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               var sObj = {};
               if (newSpeed)
                 sObj.newSpeed = newSpeed;
               xhr.get(baseurl + '/product/' + productId + '/rating/' + year + '/' + month, sObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
@@ -1051,22 +1051,22 @@ var mp = (function() {
         //            });
         //          });
         //        },
-        graph: function() {
+        graph: function () {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/graph/', {
                   productIdOrUid: productId
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        graphMbps: function(from, to) {
+        graphMbps: function (from, to) {
 
           var pObj = {
             productIdOrUid: productId
@@ -1075,33 +1075,33 @@ var mp = (function() {
           pObj.from = from || pObj.to - 86400000;
 
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/graph/mbps/', pObj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        logs: function() {
+        logs: function () {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/product/' + productId + '/logs', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        getKey: function(key) {
+        getKey: function (key) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
+          return new Promise(function (resolve, reject) {
             var obj = {};
 
             if (key)
@@ -1110,10 +1110,10 @@ var mp = (function() {
             if (productId)
               obj.productIdOrUid = productId;
 
-            q.onready(function() {
+            q.onready(function () {
               xhr.get(baseurl + '/service/key', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     d.data = d.data || [];
                     resolve(d.data || d);
                   }
@@ -1121,34 +1121,34 @@ var mp = (function() {
             });
           });
         },
-        createKey: function(obj) {
+        createKey: function (obj) {
           obj.productUid = productId;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/service/key', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }).catch(reject);
             });
           });
         },
-        updateKey: function(obj) {
+        updateKey: function (obj) {
           obj.productUid = productId;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/service/key', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }).catch(reject);
             });
           });
         },
-        cancel: function(now, rating, description) {
-          return new Promise(function(resolve, reject) {
-            reject = reject || function() {};
-            q.onready(function() {
+        cancel: function (now, rating, description) {
+          return new Promise(function (resolve, reject) {
+            reject = reject || function () {};
+            q.onready(function () {
               var obj = {};
               if (rating || description)
                 obj = {
@@ -1157,59 +1157,59 @@ var mp = (function() {
                 };
               xhr.jpost(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL'), obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }).catch(reject);
             });
           });
         },
-        uncancel: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        uncancel: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/product/' + productId + '/action/UN_CANCEL', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }).catch(reject);
             });
           });
         },
-        cancelCharges: function(now) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        cancelCharges: function (now) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/product/' + productId + '/action/' + (now ? 'CANCEL_NOW' : 'CANCEL') + '/charges', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }).catch(reject);
             });
           });
         },
-        update: function(obj) {
+        update: function (obj) {
           var innerThis = this;
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
-              innerThis.get().then(function(productObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              innerThis.get().then(function (productObj) {
                 var type = '/' + productObj.productType.toLowerCase();
                 if (type == '/megaport')
                   type = '';
                 xhr.put(baseurl + '/product' + type + '/' + productId, obj, innerthis.credentials.token)
                   .then(
-                    function(d) {
+                    function (d) {
                       resolve(d.data || d);
                     }).catch(reject);
               });
             });
           });
         },
-        get: function(incResources) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        get: function (incResources) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/product/' + productId, {
                   incResources: (incResources ? 'true' : 'false')
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }).catch(reject);
             });
@@ -1218,7 +1218,7 @@ var mp = (function() {
       };
     };
 
-    this.lists = function(name) {
+    this.lists = function (name) {
 
       // markets, locations
 
@@ -1242,15 +1242,15 @@ var mp = (function() {
       // /v2/dropdowns/person/{personId}/megaports
 
 
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           if (typeof cache[url] === 'object') {
             resolve(cache[url].data || cache[url]);
             return;
           }
           xhr.get(baseurl + url, {}, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 cache[url] = d;
                 resolve(d.data || d);
               }).catch(reject);
@@ -1259,46 +1259,46 @@ var mp = (function() {
     };
 
 
-    this.markets = function(marketId) {
+    this.markets = function (marketId) {
 
       return {
-        update: function(obj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        update: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/market/' + marketId, obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d);
                   }).catch(reject);
             });
           });
         },
-        create: function(obj) {
+        create: function (obj) {
           //  https://git.megaport.com/snippets/97
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/market', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }).catch(reject);
             });
           });
         },
         delete: {}, // needs to be written
-        then: (marketId ? function(resolve, reject) {
-          q.onready(function() {
+        then: (marketId ? function (resolve, reject) {
+          q.onready(function () {
             xhr.get(baseurl + '/market/' + marketId, {}, innerthis.credentials.token)
               .then(
-                function(d) {
+                function (d) {
                   resolve(d.data || d);
                 }).catch(reject);
           });
-        } : function(resolve, reject) {
-          q.onready(function() {
+        } : function (resolve, reject) {
+          q.onready(function () {
             xhr.get(baseurl + '/market', {}, innerthis.credentials.token)
               .then(
-                function(d) {
+                function (d) {
                   resolve(d.data || d);
                 }).catch(reject);
           });
@@ -1307,85 +1307,85 @@ var mp = (function() {
     };
 
 
-    this.marketplace = function() {
+    this.marketplace = function () {
       return {
-        get: function(includeServices) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        get: function (includeServices) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/marketplace/profiles', {
                 includeServices: (includeServices ? 'true' : 'false')
-              }, innerthis.credentials.token).then(function(d) {
+              }, innerthis.credentials.token).then(function (d) {
                 resolve(d.data || d);
               }).catch(reject);
             });
           });
         },
-        updateProfile: function(marketPlaceObj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        updateProfile: function (marketPlaceObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/marketplace/profile', marketPlaceObj, innerthis.credentials.token)
-                .then(function(d) {
+                .then(function (d) {
                   resolve(d.data || d);
                 }).catch(reject);
             });
           });
         },
-        updateServices: function(servicesObj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        updateServices: function (servicesObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/marketplace/services', servicesObj, innerthis.credentials.token)
-                .then(function(d) {
+                .then(function (d) {
                   resolve(d.data || d);
                 }).catch(reject);
             });
           });
         },
-        services: function(companyUid) {
+        services: function (companyUid) {
           var url = '/marketplace/services' + (companyUid ? '/' + companyUid : '');
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + url, {}, innerthis.credentials.token)
-                .then(function(d) {
+                .then(function (d) {
                   resolve(d.data || d);
                 }).catch(reject);
             });
           });
         },
-        profile: function(companyUid) {
+        profile: function (companyUid) {
           var url = '/marketplace/profile' + (companyUid ? '/' + companyUid : '');
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
-              xhr.get(baseurl + url, {}, innerthis.credentials.token).then(function(d) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + url, {}, innerthis.credentials.token).then(function (d) {
                 resolve(d.data || d);
               }).catch(reject);
             });
           });
         },
-        providerTypes: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        providerTypes: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/marketplace/providerType', {}, innerthis.credentials.token)
-                .then(function(d) {
+                .then(function (d) {
                   resolve(d.data || d);
                 }).catch(reject);
             });
           });
         },
-        serviceTypes: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        serviceTypes: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/marketplace/servicesType', {}, innerthis.credentials.token)
-                .then(function(d) {
+                .then(function (d) {
                   resolve(d.data || d);
                 }).catch(reject);
             });
           });
         },
-        contact: function(contactObj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        contact: function (contactObj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/marketplace/contact', contactObj, innerthis.credentials.token)
-                .then(function(d) {
+                .then(function (d) {
                   resolve(d.data || d);
                 }).catch(reject);
             });
@@ -1394,18 +1394,18 @@ var mp = (function() {
       };
     };
 
-    this.company = function(companyUid) {
+    this.company = function (companyUid) {
       companyUid = companyUid || innerthis.credentials.companyUid;
       return {
-        upgrade: function(obj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        upgrade: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/social/company', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -1417,25 +1417,25 @@ var mp = (function() {
             });
           });
         },
-        update: function(obj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        update: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/company', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d);
                   }).catch(reject);
             });
           });
         },
-        then: function(resolve, reject) {
-          q.onready(function() {
+        then: function (resolve, reject) {
+          q.onready(function () {
             xhr.get(baseurl + '/company/' + companyUid, {}, innerthis.credentials.token)
               .then(
-                function(d) {
+                function (d) {
                   resolve(d.data || d);
                 },
-                function(d) {
+                function (d) {
                   if (typeof reject == 'function')
                     reject(d);
                   if (typeof errors == 'function')
@@ -1444,16 +1444,16 @@ var mp = (function() {
               );
           });
         },
-        metadata: function() {
+        metadata: function () {
           return {
-            then: function(resolve, reject) {
-              q.onready(function() {
+            then: function (resolve, reject) {
+              q.onready(function () {
                 xhr.get(baseurl + '/company/' + companyUid + '/metadata', {}, innerthis.credentials.token)
                   .then(
-                    function(d) {
+                    function (d) {
                       resolve(d.data || d);
                     },
-                    function(d) {
+                    function (d) {
                       if (typeof reject == 'function')
                         reject(d);
                       if (typeof errors == 'function')
@@ -1462,12 +1462,12 @@ var mp = (function() {
                   );
               });
             },
-            update: function(obj) {
-              return new Promise(function(resolve, reject) {
-                q.onready(function() {
+            update: function (obj) {
+              return new Promise(function (resolve, reject) {
+                q.onready(function () {
                   xhr.put(baseurl + '/company/' + companyUid + '/metadata', obj, innerthis.credentials.token)
                     .then(
-                      function(d) {
+                      function (d) {
                         resolve(d);
                       }).catch(reject);
                 });
@@ -1479,19 +1479,19 @@ var mp = (function() {
       };
     };
 
-    this.simplePay = function() {
+    this.simplePay = function () {
       return {
-        getCheckout: function(supplierId) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        getCheckout: function (supplierId) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/simplepay/checkout', {
                   supplierId: supplierId
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -1503,15 +1503,15 @@ var mp = (function() {
             });
           });
         },
-        registrations: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        registrations: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/simplepay/registration', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -1523,15 +1523,15 @@ var mp = (function() {
             });
           });
         },
-        register: function(obj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        register: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/simplepay/registration', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -1546,14 +1546,14 @@ var mp = (function() {
       };
     };
 
-    this.employment = function(employmentId) {
+    this.employment = function (employmentId) {
       return {
-        employ: function(obj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        employ: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.jpost(baseurl + '/employment', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
@@ -1561,15 +1561,15 @@ var mp = (function() {
           });
         },
         delete: {}, // needs to be written
-        get: function() {
-          return new Promise(function(resolve, reject) {
+        get: function () {
+          return new Promise(function (resolve, reject) {
             var url = baseurl + '/employment';
             if (employmentId)
               url = baseurl + '/employment/' + employmentId;
 
             xhr.get(url, {}, innerthis.credentials.token)
               .then(
-                function(d) {
+                function (d) {
                   resolve(d.data || d);
                 }).catch(reject);
           });
@@ -1577,88 +1577,88 @@ var mp = (function() {
       };
     };
 
-    this.profile = function(obj) {
+    this.profile = function (obj) {
       return {
-        mfaQr: function() {
+        mfaQr: function () {
           // /v2/mfa/qr?
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/mfa/qr', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        update: function(obj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        update: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/employee/' + innerthis.credentials.personId, obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        changeEmail: function(obj) {
+        changeEmail: function (obj) {
           // password, newEmail
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.post(baseurl + '/email/change', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        verifyEmail: function(token) {
-          return new Promise(function(resolve, reject) {
+        verifyEmail: function (token) {
+          return new Promise(function (resolve, reject) {
             xhr.post(baseurl + '/email/verify', {
                 verifyToken: token
               })
               .then(
-                function(d) {
+                function (d) {
                   resolve(d.data || d);
                 }
               ).catch(reject);
           });
         },
-        changePassword: function(obj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        changePassword: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.post(baseurl + '/password/change', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        activity: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        activity: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/activity', {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        get: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        get: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/employee/' + innerthis.credentials.personId, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
@@ -1668,26 +1668,26 @@ var mp = (function() {
       };
     };
 
-    this.employee = function(id) {
+    this.employee = function (id) {
       return {
-        update: function(obj) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        update: function (obj) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.put(baseurl + '/employee/' + id, obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
             });
           });
         },
-        get: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        get: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/employee/' + id, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   }
                 ).catch(reject);
@@ -1702,7 +1702,7 @@ var mp = (function() {
       if (typeof str != 'string')
         str = JSON.stringify(str);
       if (Array.prototype.reduce) {
-        return str.split('').reduce(function(a, b) {
+        return str.split('').reduce(function (a, b) {
           a = ((a << 5) - a) + b.charCodeAt(0);
           return a & a;
         }, 0);
@@ -1723,23 +1723,23 @@ var mp = (function() {
     }
 
     var priceBookCache = {};
-    this.priceBook = function() {
+    this.priceBook = function () {
       return {
-        resetCache: function() {
+        resetCache: function () {
           priceBookCache = {};
         },
-        megaport: function(obj) {
-          return new Promise(function(resolve, reject) {
+        megaport: function (obj) {
+          return new Promise(function (resolve, reject) {
             if (priceBookCache[hash(obj)])
               return resolve(clone(priceBookCache[hash(obj)]));
-            q.onready(function() {
+            q.onready(function () {
               xhr.get(baseurl + '/pricebook/megaport', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     priceBookCache[hash(obj)] = d.data || d;
                     resolve(clone(d.data) || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -1751,19 +1751,19 @@ var mp = (function() {
             });
           });
         },
-        vxc: function(obj) {
+        vxc: function (obj) {
 
-          return new Promise(function(resolve, reject) {
+          return new Promise(function (resolve, reject) {
             if (priceBookCache[hash(obj)])
               return resolve(clone(priceBookCache[hash(obj)]));
-            q.onready(function() {
+            q.onready(function () {
               xhr.get(baseurl + '/pricebook/vxc', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     priceBookCache[hash(obj)] = d.data || d;
                     resolve(clone(d.data) || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -1775,18 +1775,18 @@ var mp = (function() {
             });
           });
         },
-        ix: function(obj) {
-          return new Promise(function(resolve, reject) {
+        ix: function (obj) {
+          return new Promise(function (resolve, reject) {
             if (priceBookCache[hash(obj)])
               return resolve(clone(priceBookCache[hash(obj)]));
-            q.onready(function() {
+            q.onready(function () {
               xhr.get(baseurl + '/pricebook/ix', obj, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     priceBookCache[hash(obj)] = d.data || d;
                     resolve(clone(d.data) || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -1801,18 +1801,18 @@ var mp = (function() {
       };
     };
 
-    this.invoices = function(marketId, companyId) {
+    this.invoices = function (marketId, companyId) {
       companyId = companyId || this.credentials.companyId;
       return {
-        invoice: function(invoiceId) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        invoice: function (invoiceId) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.get(baseurl + '/invoice/' + invoiceId, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -1824,23 +1824,23 @@ var mp = (function() {
             });
           });
         },
-        pdf: function(invoiceId) {
+        pdf: function (invoiceId) {
           return {
-            then: function(func) {
+            then: function (func) {
               func(baseurl + '/invoice/' + invoiceId + '/pdf?token=' + innerthis.credentials.token);
             }
           };
         },
-        then: function(resolve, reject) {
-          q.onready(function() {
+        then: function (resolve, reject) {
+          q.onready(function () {
             xhr.get(baseurl + '/invoice', {
                 companyId: companyId
               }, innerthis.credentials.token)
               .then(
-                function(d) {
+                function (d) {
                   resolve(d.data || d);
                 },
-                function(d) {
+                function (d) {
                   reject(d);
                   if (typeof errors == 'function')
                     errors(d);
@@ -1851,17 +1851,17 @@ var mp = (function() {
       };
     };
 
-    this.promoCode = function(code) {
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+    this.promoCode = function (code) {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           xhr.get(baseurl + '/promocode', {
               promoCode: code
             }, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 resolve(d.data || d);
               },
-              function(d) {
+              function (d) {
                 reject(d);
                 if (typeof errors == 'function')
                   errors(d);
@@ -1872,15 +1872,15 @@ var mp = (function() {
       });
     };
 
-    this.approveVxc = function(orderUid, sendObj) {
-      return new Promise(function(resolve, reject) {
-        q.onready(function() {
+    this.approveVxc = function (orderUid, sendObj) {
+      return new Promise(function (resolve, reject) {
+        q.onready(function () {
           xhr.put(baseurl + '/order/vxc/' + orderUid, sendObj, innerthis.credentials.token)
             .then(
-              function(d) {
+              function (d) {
                 resolve(d.data || d);
               },
-              function(d) {
+              function (d) {
                 reject(d);
               }
             );
@@ -1888,9 +1888,9 @@ var mp = (function() {
       });
     };
 
-    this.serviceOrder = function(serviceOrderUid, companyUid) {
+    this.serviceOrder = function (serviceOrderUid, companyUid) {
       return {
-        save: function(title, obj) {
+        save: function (title, obj) {
           var sendObj = {
             companyUid: companyUid || innerthis.credentials.companyUid
           };
@@ -1904,25 +1904,25 @@ var mp = (function() {
             }
           }
 
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               if (typeof serviceOrderUid == 'string') {
                 xhr.put(baseurl + '/serviceorder/' + serviceOrderUid, sendObj, innerthis.credentials.token)
                   .then(
-                    function(d) {
+                    function (d) {
                       resolve(d.data || d);
                     },
-                    function(d) {
+                    function (d) {
                       reject(d);
                     }
                   );
               } else {
                 xhr.jpost(baseurl + '/serviceorder', sendObj, innerthis.credentials.token)
                   .then(
-                    function(d) {
+                    function (d) {
                       resolve(d.data || d);
                     },
-                    function(d) {
+                    function (d) {
                       reject(d);
                     }
                   );
@@ -1930,51 +1930,51 @@ var mp = (function() {
             });
           });
         },
-        delete: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        delete: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.delete(baseurl + '/serviceorder/' + serviceOrderUid, {}, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     reject(d);
                   }
                 );
             });
           });
         },
-        validate: function() {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        validate: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.post(baseurl + '/serviceorder/validate', {
                   serviceOrderId: serviceOrderUid,
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     reject(d);
                   }
                 );
             });
           });
         },
-        deploy: function(promoCodes) {
-          return new Promise(function(resolve, reject) {
-            q.onready(function() {
+        deploy: function (promoCodes) {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
               xhr.post(baseurl + '/serviceorder/process', {
                   serviceOrderId: serviceOrderUid,
                   serviceOrderStatus: 'ACCEPTED',
                   promoCodes: JSON.stringify(promoCodes)
                 }, innerthis.credentials.token)
                 .then(
-                  function(d) {
+                  function (d) {
                     resolve(d.data || d);
                   },
-                  function(d) {
+                  function (d) {
                     if (typeof reject == 'function') {
                       reject(d);
                     } else {
@@ -1986,8 +1986,8 @@ var mp = (function() {
             });
           });
         },
-        then: function(resolve, reject) {
-          q.onready(function() {
+        then: function (resolve, reject) {
+          q.onready(function () {
             var url, obj;
             if (typeof serviceOrderUid == 'string') {
               url = '/serviceorder/' + serviceOrderUid;
@@ -2000,10 +2000,10 @@ var mp = (function() {
             }
             xhr.get(baseurl + url, obj, innerthis.credentials.token)
               .then(
-                function(d) {
+                function (d) {
                   resolve(d.data || d);
                 },
-                function(d) {
+                function (d) {
                   reject(d);
                   if (typeof errors == 'function')
                     errors(d);
@@ -2015,11 +2015,11 @@ var mp = (function() {
     };
 
 
-    this.register = function(obj) {
-      return new Promise(function(resolve, reject) {
+    this.register = function (obj) {
+      return new Promise(function (resolve, reject) {
         xhr.post(baseurl + '/social/registration', obj)
           .then(
-            function(d) {
+            function (d) {
               resolve(d.data || d);
             })
           .catch(reject);
@@ -2032,12 +2032,12 @@ var mp = (function() {
   function srvcObj(obj) {
     var megaports = {};
     if (typeof obj != 'object') return [];
-    obj.map(function(e) {
-      e.megaports.map(function(m) {
+    obj.map(function (e) {
+      e.megaports.map(function (m) {
         megaports[m.productUid] = m;
       });
     });
-    var arr = Object.keys(megaports).map(function(key) {
+    var arr = Object.keys(megaports).map(function (key) {
       return megaports[key];
     });
     return arr;
@@ -2048,14 +2048,14 @@ var mp = (function() {
     var state = false;
     var qued = [];
 
-    this.onready = function(callback) {
+    this.onready = function (callback) {
       if (state === false)
         qued.push(callback);
       else
         callback();
     };
 
-    this.ready = function() {
+    this.ready = function () {
       state = true;
       for (var f in qued) {
         if (typeof qued[f] == 'function')
@@ -2066,10 +2066,10 @@ var mp = (function() {
   }
 
   var pendingXhr = [];
-  var xhreq = function() {
+  var xhreq = function () {
     var innerthis = this;
 
-    this.ajax = function(method, url, params, token, syncro) {
+    this.ajax = function (method, url, params, token, syncro) {
 
       var logPbj = {
         method: method.replace('J', ''),
@@ -2079,12 +2079,12 @@ var mp = (function() {
       };
 
       syncro = syncro || true;
-      return new Promise(function(resolve, reject) {
+      return new Promise(function (resolve, reject) {
         method = method.toUpperCase();
 
         if (method == 'GET') {
           if (typeof params == 'object') {
-            var querystr = (function(obj) {
+            var querystr = (function (obj) {
               var str = [];
               for (var p in obj) {
                 if (obj.hasOwnProperty(p)) {
@@ -2112,7 +2112,7 @@ var mp = (function() {
         if (typeof token == 'string')
           rq.setRequestHeader('X-Auth-Token', token);
 
-        rq.onload = function() {
+        rq.onload = function () {
           pendingXhr.shift();
           rq.status = parseInt(rq.status) || 400;
 
@@ -2127,10 +2127,17 @@ var mp = (function() {
             resolve(JSON.parse(rq.responseText));
           }
           if (rq.status > 210) {
-            reject({
-              status: rq.status,
-              data: JSON.parse(rq.responseText)
-            });
+            try {
+              reject({
+                status: rq.status,
+                data: JSON.parse(rq.responseText)
+              });
+            } catch (err) {
+              reject({
+                status: rq.status,
+                data: null
+              });
+            }
             logPbj.responseBody = rq.responseText;
           }
           if (rq.status == 400) {
@@ -2142,7 +2149,7 @@ var mp = (function() {
 
           sessionXhrLog.push(logPbj);
         };
-        rq.onerror = function() {
+        rq.onerror = function () {
 
           logPbj.status = 0;
           logPbj.rTime = Date.now() - logPbj.rTime;
@@ -2158,7 +2165,7 @@ var mp = (function() {
           case 'POST':
             rq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             if (typeof params == 'object') {
-              params = (function(obj) {
+              params = (function (obj) {
                 var str = [];
                 for (var p in obj)
                   if (obj.hasOwnProperty(p))
@@ -2186,19 +2193,19 @@ var mp = (function() {
       });
     };
 
-    this.get = function(url, params, token, syncro) {
+    this.get = function (url, params, token, syncro) {
       return innerthis.ajax('GET', url, params, token, syncro);
     };
-    this.post = function(url, params, token, syncro) {
+    this.post = function (url, params, token, syncro) {
       return innerthis.ajax('POST', url, params, token, syncro);
     };
-    this.jpost = function(url, params, token, syncro) {
+    this.jpost = function (url, params, token, syncro) {
       return innerthis.ajax('JPOST', url, params, token, syncro);
     };
-    this.put = function(url, params, token, syncro) {
+    this.put = function (url, params, token, syncro) {
       return innerthis.ajax('PUT', url, params, token, syncro);
     };
-    this.delete = function(url, params, token, syncro) {
+    this.delete = function (url, params, token, syncro) {
       return innerthis.ajax('DELETE', url, params, token, syncro);
     };
   };
