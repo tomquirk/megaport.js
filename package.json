@@ -1,0 +1,22 @@
+{
+  "name": "megaport.js",
+  "version": "1.0.0",
+  "description": "megaport js wrapper",
+  "main": "megaport.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/megaport/megaport.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/megaport/megaport.js/issues"
+  },
+  "homepage": "https://github.com/megaport/megaport.js#readme"
+}
