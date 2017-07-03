@@ -50,6 +50,7 @@ var mp = (function () {
           authParams.target_username = obj.target_username;
 
       } else if (typeof obj.token == 'string') {
+        authParams = {};
         authUrl = baseurl + '/login/' + obj.token;
         if (typeof obj.target_username == 'string')
           authUrl = authUrl + '?target_username=' + obj.target_username;
