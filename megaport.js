@@ -52,6 +52,8 @@ var mp = (function () {
       } else if (typeof obj.token == 'string') {
         authUrl = baseurl + '/login/' + obj.token;
         authParams = {};
+        if (typeof obj.target_username == 'string')
+          authParams.target_username = obj.target_username;
       } else if (typeof obj.access_token == 'string' && typeof obj.network == 'string') {
         authUrl = baseurl + '/social/login/' + obj.network;
         authParams = {
