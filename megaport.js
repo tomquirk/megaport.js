@@ -395,10 +395,30 @@ var mp = (function () {
             });
           });
         },
-        agentOverview: function () {
+        agentOverview: function (agentId) {
           return new Promise(function (resolve, reject) {
             q.onready(function () {
-              xhr.get(baseurl + '/agency/' + agencyId + '/agent/overview', {}, innerthis.credentials.token)
+              xhr.get(baseurl + '/agent/' + agentId + '/overview', {}, innerthis.credentials.token)
+                .then(
+                  function (d) {
+                    resolve(d.data || d);
+                  },
+                  function (d) {
+                    if (typeof reject == 'function') {
+                      reject(d);
+                    } else {
+                      if (typeof errors == 'function')
+                        errors(d);
+                    }
+                  }
+                );
+            });
+          });
+        },
+        agencyOverview: function () {
+          return new Promise(function (resolve, reject) {
+            q.onready(function () {
+              xhr.get(baseurl + '/agency/' + agencyId + '/overview', {}, innerthis.credentials.token)
                 .then(
                   function (d) {
                     resolve(d.data || d);
