@@ -1,6 +1,6 @@
 # Megaport JS Wrapper functions
 
-## Initilising the wrapper
+## Initialising the wrapper
 
 Staging Url 'https://api-staging.i.megaport.com'
 
